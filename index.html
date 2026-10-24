@@ -1,1411 +1,2319 @@
 <!DOCTYPE html>
 <html lang="zh-CN" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <title>手冲咖啡调豆与萃取动力学实验室 | Pour-Over Extraction Lab</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-            serif: ['Noto Serif SC', 'serif']
-          },
-          colors: {
-            espresso: {
-              950: '#0f0c0a',
-              900: '#181310',
-              800: '#241c17',
-              700: '#352922',
-              600: '#4a392f'
-            },
-            amber: {
-              450: '#f59e0b',
-              550: '#d97706'
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>手冲咖啡调豆与萃取动力学实验室 | Specialty Coffee Extraction Physics Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        lab: {
+                            bg: '#0f0e0d',
+                            panel: '#181614',
+                            card: '#211e1b',
+                            border: '#332e2a',
+                            amber: '#d97706',
+                            gold: '#f59e0b',
+                            copper: '#b45309',
+                            crema: '#fef3c7'
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background-color: #0f0c0a;
-      color: #f3ede4;
-      overflow-x: hidden;
-    }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #181310; }
-    ::-webkit-scrollbar-thumb { background: #4a392f; border-radius: 3px; }
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      background: transparent;
-      cursor: pointer;
-    }
-    input[type="range"]::-webkit-slider-runnable-track {
-      height: 8px;
-      border-radius: 4px;
-      background: #352922;
-    }
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      margin-top: -6px;
-      background-color: #f59e0b;
-      height: 20px;
-      width: 20px;
-      border-radius: 50%;
-      border: 2px solid #fffbeb;
-      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-      transition: transform 0.15s ease, background-color 0.15s ease;
-    }
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-      background-color: #fbbf24;
-    }
-    @media (max-width: 640px) {
-      input[type="range"]::-webkit-slider-thumb {
-        height: 24px;
-        width: 24px;
-        margin-top: -8px;
-      }
-    }
-    .glass-card {
-      background: rgba(24, 19, 16, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(245, 158, 11, 0.14);
-    }
-    @media print {
-      @page { size: A4 portrait; margin: 10mm 12mm; }
-      html, body {
-        background: #ffffff !important;
-        color: #111827 !important;
-        font-size: 11px !important;
-        line-height: 1.38 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .no-print { display: none !important; }
-      .print-only { display: block !important; }
-      .print-page {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-        background: #ffffff !important;
-        color: #000000 !important;
-      }
-      .print-table th, .print-table td {
-        border: 1px solid #cbd5e1 !important;
-        padding: 4px 6px !important;
-      }
-      .print-box {
-        border: 1px solid #94a3b8 !important;
-        border-radius: 4px !important;
-        padding: 6px 8px !important;
-        background: #f8fafc !important;
-      }
-    }
-  </style>
+    </script>
+    <style>
+        body {
+            background-color: #0f0e0d;
+            color: #e7e5e4;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(217, 119, 6, 0.06) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(180, 83, 9, 0.05) 0%, transparent 45%);
+            overflow-x: hidden;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #2b2623;
+            border-radius: 999px;
+            outline: none;
+            border: 1px solid #3d3630;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #f59e0b;
+            border: 2px solid #fef3c7;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
+            transition: transform 0.15s ease, background-color 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            background: #fbbf24;
+        }
+
+        @media (max-width: 640px) {
+            input[type="range"]::-webkit-slider-thumb {
+                width: 22px;
+                height: 22px;
+            }
+        }
+
+        .lab-grid-bg {
+            background-size: 24px 24px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        }
+
+        .glow-amber {
+            box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25);
+        }
+
+        /* ==================== STRICT SINGLE-PAGE A4 PRINT RULES ==================== */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 6mm 8mm;
+            }
+            html, body {
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                background-image: none !important;
+                color: #0f172a !important;
+                font-size: 9.2px !important;
+                line-height: 1.24 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-page {
+                width: 100% !important;
+                max-height: 282mm !important;
+                overflow: hidden !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            .print-table th, .print-table td {
+                border: 1px solid #cbd5e1 !important;
+                padding: 2px 4px !important;
+            }
+            .print-box {
+                border: 1px solid #94a3b8 !important;
+                border-radius: 3px !important;
+                padding: 3px 5px !important;
+                background: #f8fafc !important;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-amber-500 selection:text-black">
+<body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
 
-  <!-- ==================== INTERACTIVE WEB UI (HIDDEN ON PRINT) ==================== -->
-  <div class="no-print flex-1 flex flex-col">
-    <header class="sticky top-0 z-30 border-b border-amber-500/15 bg-espresso-950/90 backdrop-blur-md">
-      <div class="max-w-[1600px] mx-auto px-3 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-2">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-400 to-amber-700 flex items-center justify-center text-espresso-950 font-bold text-lg shadow-lg shadow-amber-500/20">☕</div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="font-serif font-bold text-base sm:text-lg tracking-wide text-amber-50">手冲咖啡调豆与萃取动力学实验室</h1>
-              <span class="hidden md:inline-block text-[11px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">Darcy & Noyes-Whitney Sim v2.5</span>
+    <!-- ==================== INTERACTIVE WEB UI (HIDDEN WHEN PRINTING) ==================== -->
+    <div class="no-print flex-1 flex flex-col">
+        <!-- Top Navigation & Live Telemetry Bar -->
+        <header class="border-b border-lab-border bg-lab-panel/95 backdrop-blur-md sticky top-0 z-30">
+            <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2.5 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-800 flex items-center justify-center shadow-lg shadow-amber-900/30 border border-amber-400/30 shrink-0">
+                            <span class="text-lg">☕</span>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h1 class="text-sm sm:text-base font-bold tracking-tight text-stone-100">手冲咖啡调豆与萃取动力学实验室</h1>
+                                <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30">Canvas Engine v3.2</span>
+                            </div>
+                            <p class="text-[11px] text-stone-400">全终端自适应 · 5大经典产区豆款 · 1:1物理粒径Canvas实尺 · 单页A4报告打印</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Buttons on Mobile/Tablet -->
+                    <div class="flex xl:hidden items-center gap-2">
+                        <button id="btn-print-mobile" type="button" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 transition cursor-pointer shrink-0">
+                            🖨️ 打印A4报告
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Top Telemetry Readouts + Print Button -->
+                <div class="flex flex-wrap items-center gap-2 sm:gap-2.5 justify-between xl:justify-end">
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 flex-1 xl:flex-initial">
+                        <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1 flex flex-col justify-between">
+                            <span class="text-[10px] text-stone-400 flex items-center justify-between gap-2">
+                                <span>萃取率 (EY%)</span>
+                                <span id="badge-ey-status" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                            </span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="metric-ey" class="font-mono text-sm sm:text-base font-bold text-amber-400">20.15</span>
+                                <span class="font-mono text-[10px] text-stone-500">%</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1 flex flex-col justify-between">
+                            <span class="text-[10px] text-stone-400">浓度 (TDS%)</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="metric-tds" class="font-mono text-sm sm:text-base font-bold text-amber-200">1.34</span>
+                                <span class="font-mono text-[10px] text-stone-500">%</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1 flex flex-col justify-between">
+                            <span class="text-[10px] text-stone-400">预计总时间</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="metric-time" class="font-mono text-sm sm:text-base font-bold text-stone-100">02:18</span>
+                                <span id="metric-stall-tag" class="hidden text-[9px] font-mono px-1 rounded bg-red-500/20 text-red-400">堵水</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1 flex flex-col justify-between">
+                            <span class="text-[10px] text-stone-400">平均渗流速度</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="metric-flow" class="font-mono text-sm sm:text-base font-bold text-sky-400">1.95</span>
+                                <span class="font-mono text-[10px] text-stone-500">ml/s</span>
+                            </div>
+                        </div>
+
+                        <div class="col-span-2 sm:col-span-1 bg-lab-card border border-lab-border rounded-lg px-2.5 py-1 flex flex-col justify-between">
+                            <span class="text-[10px] text-stone-400">达西阻力 (R)</span>
+                            <div class="flex items-baseline gap-1">
+                                <span id="metric-darcy" class="font-mono text-sm sm:text-base font-bold text-orange-400">4.2</span>
+                                <span id="metric-darcy-label" class="font-mono text-[9px] text-stone-400">/10 适中</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hidden xl:flex items-center gap-2">
+                        <a href="#section-report" class="text-xs px-3 py-2 rounded-xl bg-lab-card hover:bg-stone-800 text-stone-200 border border-lab-border transition">
+                            📝 品鉴记录单
+                        </a>
+                        <button id="btn-print-top" type="button" class="text-xs font-semibold px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-lg shadow-amber-500/20 transition cursor-pointer">
+                            🖨️ 打印单页 A4 报告
+                        </button>
+                    </div>
+                </div>
             </div>
-            <p class="text-[11px] sm:text-xs text-stone-400">支持手机 / 平板 / 桌面自适应 · 实时渗流与微分溶出模拟 · A4 实验报告与感官记录打印</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3 ml-auto">
-          <button id="btnSweetSpot" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition flex items-center gap-1.5">
-            <span>✨</span> <span>一键金杯校准</span>
-          </button>
-          <a href="#tastingSection" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-600 transition flex items-center gap-1.5">
-            <span>📝</span> <span class="hidden sm:inline">填写品鉴单</span><span class="sm:hidden">品鉴单</span>
-          </a>
-          <button id="btnPrintTop" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500 hover:bg-amber-400 text-espresso-950 shadow-md shadow-amber-500/20 transition flex items-center gap-1.5">
-            <span>🖨️</span> <span>打印 A4 报告</span>
-          </button>
-        </div>
-      </div>
-    </header>
+        </header>
 
-    <main class="max-w-[1600px] w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-6">
-      <!-- Section 1: Bean Preset Bar -->
-      <section class="glass-card rounded-xl p-3 sm:p-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-mono uppercase tracking-wider text-amber-400">01 / 选择实验豆款 (Bean & Processing Model)</span>
-            <span class="text-[11px] text-stone-400 hidden md:inline">— 不同海拔、烘焙度与处理法决定了细胞壁孔隙率与细粉生成率</span>
-          </div>
-          <div id="beanMetaBadge" class="text-xs font-mono text-amber-300/90 bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20 self-start sm:self-auto">加载中...</div>
-        </div>
-        <div id="beanSelectorGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5"></div>
-      </section>
+        <main class="flex-1 max-w-[1600px] w-full mx-auto p-3 sm:p-5 space-y-5">
 
-      <!-- Section 2: Core Workbench -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-        <!-- Controls -->
-        <section class="lg:col-span-4 glass-card rounded-xl p-4 sm:p-5 space-y-5">
-          <div class="flex items-center justify-between border-b border-stone-800 pb-3">
+            <!-- TOP workbench: 12 columns -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
+
+                <!-- LEFT COLUMN: Bean Presets & Brewing Parameters Control Panel (4 cols on lg) -->
+                <section class="lg:col-span-4 flex flex-col gap-4">
+                    
+                    <!-- Bean & Processing Presets Card (Now 5 Beans including Brazil) -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl">
+                        <div class="flex items-center justify-between mb-3">
+                            <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                A. 豆款与处理法预设 (含新增巴西豆)
+                            </h2>
+                            <button id="btn-optimal-recipe" type="button" class="text-xs font-mono px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 transition flex items-center gap-1 cursor-pointer">
+                                <span>✨ 一键金杯推荐参数</span>
+                            </button>
+                        </div>
+
+                        <!-- Bean Preset Cards -->
+                        <div id="bean-preset-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Bean Intrinsic Physics Property Bar -->
+                        <div class="mt-3 pt-2.5 border-t border-lab-border/80 grid grid-cols-3 gap-2 text-center bg-lab-card/60 rounded-xl p-2">
+                            <div>
+                                <span class="text-[10px] text-stone-400 block">细胞壁孔隙率</span>
+                                <span id="bean-prop-porosity" class="font-mono text-xs font-semibold text-amber-300">中偏紧 (0.56)</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-stone-400 block">细粉产生率</span>
+                                <span id="bean-prop-fines" class="font-mono text-xs font-semibold text-stone-200">较低 (0.92x)</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-stone-400 block">烘焙溶解活性</span>
+                                <span id="bean-prop-roast" class="font-mono text-xs font-semibold text-orange-300">浅烘 / 高花果</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Brewing Parameters Sliders Card -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between gap-3.5">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                B. 冲煮动力学参数台
+                            </h2>
+                            <span class="text-[11px] font-mono text-stone-400">基准粉重: <strong class="text-amber-400">15.0g</strong></span>
+                        </div>
+
+                        <!-- 1. Grind Size Slider + 1:1 Absolute Physical Size Canvas Gauge -->
+                        <div class="bg-lab-card border border-lab-border rounded-xl p-3 space-y-2.5">
+                            <div class="flex justify-between items-center">
+                                <label for="slider-grind" class="text-xs font-medium text-stone-300">研磨粒径 (Grind Size d50)</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="label-grind-desc" class="text-[11px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">标准手冲</span>
+                                    <span id="val-grind" class="font-mono text-sm font-bold text-amber-400">660 μm</span>
+                                </div>
+                            </div>
+                            <input id="slider-grind" type="range" min="300" max="1100" step="10" value="660">
+                            <div class="flex justify-between text-[10px] font-mono text-stone-500">
+                                <span>300μm (极细)</span>
+                                <span>550μm (细)</span>
+                                <span>750μm (中)</span>
+                                <span>1100μm (粗)</span>
+                            </div>
+
+                            <div class="flex justify-between text-[11px] text-stone-400 pt-1 border-t border-lab-border/60">
+                                <span>有效比表面积: <strong id="val-ssa" class="font-mono text-stone-200">88 cm²/g</strong></span>
+                                <span>极细粉(&lt;100μm): <strong id="val-fines-pct" class="font-mono text-amber-400">11.2%</strong></span>
+                            </div>
+
+                            <!-- 1:1 TRUE PHYSICAL SIZE CANVAS COMPARISON CARD -->
+                            <div class="bg-stone-950/90 border border-amber-500/30 rounded-xl p-2.5 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-semibold text-amber-300 flex items-center gap-1">
+                                        📏 1:1 绝对尺寸颗粒比对卡 (Canvas 实尺)
+                                    </span>
+                                    <button id="btn-toggle-calib" type="button" class="text-[10px] font-mono px-2 py-0.5 rounded bg-stone-800 hover:bg-stone-700 text-amber-200 border border-stone-600 cursor-pointer">
+                                        ⚙️ 屏幕微调
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-stone-400 leading-snug">
+                                    白框内以<strong>真实物理毫米 (1mm=1000μm)</strong> 绘制 16 粒当前粒径与 16 粒推荐粒径，已开启<strong>抗网页缩放锁定</strong>。A4打印默认设置下与真粉 1:1 完全一致。
+                                </p>
+
+                                <!-- Optional Screen PPI Calibrator -->
+                                <div id="panel-screen-calib" class="hidden bg-lab-panel border border-stone-700 rounded-lg p-2 space-y-1.5">
+                                    <div class="flex justify-between items-center text-[10px] text-amber-200">
+                                        <span>将 1 元硬币(直径25mm)或尺子贴在屏幕比对刻度：</span>
+                                        <button id="btn-reset-calib" type="button" class="underline text-stone-400 hover:text-amber-300 cursor-pointer">重置1.00x</button>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <input id="slider-screen-calib" type="range" min="0.70" max="1.50" step="0.01" value="1.00">
+                                        <span id="val-screen-calib" class="font-mono text-[10px] text-amber-400 w-10 text-right">1.00x</span>
+                                    </div>
+                                </div>
+
+                                <!-- Scrollable container holding the physical-locked Canvas -->
+                                <div class="overflow-x-auto flex justify-center bg-stone-900/70 rounded-lg p-1.5 border border-stone-800">
+                                    <div id="physical-canvas-wrapper" class="bg-white rounded shadow-sm p-1 shrink-0 origin-top">
+                                        <canvas id="canvas-physical-particles" width="272" height="92" class="block bg-white"></canvas>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] font-mono text-stone-400">
+                                    <span id="label-zoom-lock" class="text-emerald-400">✓ 已锁定物理毫米尺寸 (抗缩放开启)</span>
+                                    <span>总宽: 72.0 mm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Water Temperature Slider -->
+                        <div class="bg-lab-card border border-lab-border rounded-xl p-3">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label for="slider-temp" class="text-xs font-medium text-stone-300">冲煮水温 (Water Temp)</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="label-temp-desc" class="text-[11px] px-2 py-0.5 rounded bg-orange-500/10 text-orange-300 border border-orange-500/20">浅烘高频酸甜</span>
+                                    <span id="val-temp" class="font-mono text-sm font-bold text-orange-400">93.0 °C</span>
+                                </div>
+                            </div>
+                            <input id="slider-temp" type="range" min="82" max="98" step="0.5" value="93">
+                            <div class="flex justify-between text-[10px] font-mono text-stone-500 mt-1">
+                                <span>82°C (控苦)</span>
+                                <span>88°C (均衡中烘)</span>
+                                <span>93°C (浅烘标准)</span>
+                                <span>98°C (极限浅烘)</span>
+                            </div>
+                        </div>
+
+                        <!-- 3. Brew Ratio Slider -->
+                        <div class="bg-lab-card border border-lab-border rounded-xl p-3">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label for="slider-ratio" class="text-xs font-medium text-stone-300">粉水比 (Brew Ratio)</label>
+                                <div class="flex items-center gap-2">
+                                    <span id="val-water-ml" class="text-[11px] font-mono text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">注水: 225 ml</span>
+                                    <span id="val-ratio" class="font-mono text-sm font-bold text-stone-100">1 : 15.0</span>
+                                </div>
+                            </div>
+                            <input id="slider-ratio" type="range" min="10" max="20" step="0.5" value="15">
+                            <div class="flex justify-between text-[10px] font-mono text-stone-500 mt-1">
+                                <span>1:10 (浓郁厚重)</span>
+                                <span>1:15 (SCA黄金比)</span>
+                                <span>1:20 (茶感清澈)</span>
+                            </div>
+                        </div>
+
+                        <!-- 4. Pouring Agitation & Dripper Geometry -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                            <div class="bg-lab-card border border-lab-border rounded-xl p-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-medium text-stone-300">注水扰动与分水策略</span>
+                                    <span class="text-[10px] font-mono text-amber-400">水流湍流度</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <button type="button" data-agitation="single" class="agitation-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>一刀流</span>
+                                        <span class="text-[9px] opacity-75 font-mono">强翻滚快冲</span>
+                                    </button>
+                                    <button type="button" data-agitation="three-stage" class="agitation-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>三段式</span>
+                                        <span class="text-[9px] opacity-75 font-mono">闷蒸+两段</span>
+                                    </button>
+                                    <button type="button" data-agitation="gentle" class="agitation-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>点滴柔水</span>
+                                        <span class="text-[9px] opacity-75 font-mono">低扰动慢冲</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-lab-card border border-lab-border rounded-xl p-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xs font-medium text-stone-300">滤杯几何与排流特征</span>
+                                    <span class="text-[10px] font-mono text-amber-400">导水肋骨</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <button type="button" data-dripper="v60" class="dripper-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>V60 锥形</span>
+                                        <span class="text-[9px] opacity-75 font-mono">高流速层次</span>
+                                    </button>
+                                    <button type="button" data-dripper="kalita" class="dripper-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>Kalita 平底</span>
+                                        <span class="text-[9px] opacity-75 font-mono">三孔匀萃高甜</span>
+                                    </button>
+                                    <button type="button" data-dripper="hybrid" class="dripper-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer">
+                                        <span>浸渍复合式</span>
+                                        <span class="text-[9px] opacity-75 font-mono">半浸泡圆润</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CENTER COLUMN: SCA Gold Cup Control Chart & Dripper Bed Cross-Section (4 cols on lg) -->
+                <section class="lg:col-span-4 flex flex-col gap-4">
+                    <!-- SCA Gold Cup Brewing Control Chart -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                    C1. SCA 金杯萃取控制图
+                                </h2>
+                                <p class="text-[11px] text-stone-400">X轴: 萃取率 EY (14~26%) · Y轴: 浓度 TDS (0.8~1.8%)</p>
+                            </div>
+                            <span id="gold-cup-badge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">
+                                ★ 理想金杯区间
+                            </span>
+                        </div>
+
+                        <div class="relative w-full aspect-[4/3] bg-lab-bg rounded-xl border border-lab-border overflow-hidden lab-grid-bg">
+                            <canvas id="canvas-goldcup" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <div class="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+                            <div class="bg-lab-card/80 border border-lab-border rounded-lg p-2 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-sm bg-amber-500/30 border border-amber-400 shrink-0"></span>
+                                <div>
+                                    <div class="text-stone-200 font-medium">SCA 黄金区间</div>
+                                    <div class="text-stone-400 font-mono text-[10px]">EY 18-22%</div>
+                                </div>
+                            </div>
+                            <div class="bg-lab-card/80 border border-lab-border rounded-lg p-2 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 shrink-0"></span>
+                                <div>
+                                    <div class="text-stone-200 font-medium">萃取不足 (&lt;18%)</div>
+                                    <div class="text-stone-400 text-[10px]">尖酸、青草水感</div>
+                                </div>
+                            </div>
+                            <div class="bg-lab-card/80 border border-lab-border rounded-lg p-2 flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
+                                <div>
+                                    <div class="text-stone-200 font-medium">过度萃取 (&gt;22%)</div>
+                                    <div class="text-stone-400 text-[10px]">焦苦、木质干涩</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Dripper Cross-Section & Diagnostic Barista Notes -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between gap-3">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                D. 滤杯渗流剖面与物理机理诊断
+                            </h2>
+                            <span id="diagnostic-risk-tag" class="text-[11px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-300 border border-stone-700">
+                                渗流状态正常
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center bg-lab-card/70 border border-lab-border rounded-xl p-3">
+                            <div class="sm:col-span-5 flex flex-col items-center">
+                                <canvas id="canvas-dripper-sim" width="170" height="145" class="rounded-lg bg-lab-bg border border-lab-border/80"></canvas>
+                                <span class="text-[10px] font-mono text-stone-400 mt-1">实时粉层液压与细粉迁移模拟</span>
+                            </div>
+                            <div class="sm:col-span-7 flex flex-col gap-2 text-xs">
+                                <div class="bg-lab-bg/90 border border-lab-border rounded-lg p-2.5">
+                                    <div class="flex justify-between text-[11px] text-stone-400 mb-1">
+                                        <span>达西渗流方程:</span>
+                                        <span class="font-mono text-amber-400">Q = (k·A·ΔP) / (μ·L)</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono mt-1.5">
+                                        <div class="text-stone-300">渗透率 k: <span id="phys-k" class="text-sky-300">1.42 D</span></div>
+                                        <div class="text-stone-300">堵塞系数 α: <span id="phys-clog" class="text-orange-300">0.18</span></div>
+                                        <div class="text-stone-300">热扩散常数 D: <span id="phys-diff" class="text-amber-300">1.15x</span></div>
+                                        <div class="text-stone-300">通道风险: <span id="phys-channel" class="text-emerald-300">低 (12%)</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-amber-950/20 border border-amber-500/30 rounded-lg p-2.5">
+                                    <div class="text-[11px] font-semibold text-amber-300 mb-1">
+                                        🔬 首席调豆师物理诊断与调整建议
+                                    </div>
+                                    <p id="diagnostic-text" class="text-[11px] text-stone-300 leading-relaxed">
+                                        正在计算当前粉层流体动力学状态...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RIGHT COLUMN: Flow Rate Kinetics & Sensory Flavor Balance (4 cols on lg) -->
+                <section class="lg:col-span-4 flex flex-col gap-4">
+                    <!-- Flow Rate & Differential Extraction Kinetics Curve -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl flex flex-col">
+                        <div class="flex items-center justify-between mb-2">
+                            <div>
+                                <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                    C2. 萃取流速与分段溶出动力学曲线
+                                </h2>
+                                <p class="text-[11px] text-stone-400">实线: 下水流速 (ml/s) · 虚线: 累积液重 (g)</p>
+                            </div>
+                        </div>
+
+                        <div class="relative w-full aspect-[4/3] bg-lab-bg rounded-xl border border-lab-border overflow-hidden lab-grid-bg">
+                            <canvas id="canvas-kinetics" class="w-full h-full block"></canvas>
+                        </div>
+
+                        <div class="mt-3 grid grid-cols-3 gap-2 text-[10px]">
+                            <div class="bg-amber-500/10 border border-amber-500/25 rounded-lg p-1.5 text-center">
+                                <span class="text-amber-300 font-semibold block">前段 (0~40% 液重)</span>
+                                <span class="text-stone-400">小分子花果酸高速溶出</span>
+                            </div>
+                            <div class="bg-orange-500/10 border border-orange-500/25 rounded-lg p-1.5 text-center">
+                                <span class="text-orange-300 font-semibold block">中段 (40~75% 液重)</span>
+                                <span class="text-stone-400">梅拉德焦糖甜感与醇厚</span>
+                            </div>
+                            <div class="bg-purple-500/10 border border-purple-500/25 rounded-lg p-1.5 text-center">
+                                <span class="text-purple-300 font-semibold block">尾段 (75~100% 液重)</span>
+                                <span class="text-stone-400">大分子绿原酸木质苦涩</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acid-Sweet-Bitter Balance & 6-Axis Sensory Radar -->
+                    <div class="bg-lab-panel border border-lab-border rounded-2xl p-4 shadow-xl flex-1 flex flex-col justify-between gap-3">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-sm font-semibold text-stone-200 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                C3. 酸甜苦动态天平与六维感官雷达
+                            </h2>
+                            <span id="sensory-balance-tag" class="text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                酸甜平衡型
+                            </span>
+                        </div>
+
+                        <div class="bg-lab-card border border-lab-border rounded-xl p-3">
+                            <div class="flex justify-between text-[11px] mb-1.5 font-medium">
+                                <span class="text-amber-300">明亮果酸 <strong id="pct-acid" class="font-mono">34%</strong></span>
+                                <span class="text-orange-400">焦糖甜感 <strong id="pct-sweet" class="font-mono">42%</strong></span>
+                                <span class="text-amber-700">单宁苦韵 <strong id="pct-bitter" class="font-mono">18%</strong></span>
+                                <span class="text-purple-400">杂涩感 <strong id="pct-astringent" class="font-mono">6%</strong></span>
+                            </div>
+                            <div class="w-full h-3.5 rounded-full overflow-hidden flex bg-stone-900 p-0.5 gap-0.5 border border-stone-700/70">
+                                <div id="bar-acid" class="h-full bg-gradient-to-r from-yellow-400 to-amber-500 rounded-l-full transition-all duration-200" style="width: 34%"></div>
+                                <div id="bar-sweet" class="h-full bg-gradient-to-r from-orange-500 to-amber-600 transition-all duration-200" style="width: 42%"></div>
+                                <div id="bar-bitter" class="h-full bg-gradient-to-r from-amber-800 to-stone-700 transition-all duration-200" style="width: 18%"></div>
+                                <div id="bar-astringent" class="h-full bg-gradient-to-r from-purple-700 to-purple-500 rounded-r-full transition-all duration-200" style="width: 6%"></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center flex-1">
+                            <div class="sm:col-span-7 h-52 sm:h-full min-h-[190px] relative bg-lab-bg rounded-xl border border-lab-border flex items-center justify-center">
+                                <canvas id="canvas-radar" class="w-full h-full block"></canvas>
+                            </div>
+                            <div class="sm:col-span-5 flex flex-col gap-1.5 text-xs">
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">香气 (Aroma)</span>
+                                    <span id="score-aroma" class="font-mono font-bold text-amber-300">8.8</span>
+                                </div>
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">酸质 (Acidity)</span>
+                                    <span id="score-acidity" class="font-mono font-bold text-yellow-400">8.5</span>
+                                </div>
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">甜度 (Sweetness)</span>
+                                    <span id="score-sweetness" class="font-mono font-bold text-orange-400">8.7</span>
+                                </div>
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">醇厚度 (Body)</span>
+                                    <span id="score-body" class="font-mono font-bold text-amber-500">7.6</span>
+                                </div>
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">余韵 (Aftertaste)</span>
+                                    <span id="score-aftertaste" class="font-mono font-bold text-stone-200">8.2</span>
+                                </div>
+                                <div class="bg-lab-card border border-lab-border rounded-lg px-2.5 py-1.5 flex justify-between items-center">
+                                    <span class="text-stone-400">干净度 (Clean)</span>
+                                    <span id="score-cleanliness" class="font-mono font-bold text-emerald-400">9.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- BOTTOM SECTION: Sensory Evaluation Record & Single-Page A4 Report Generator -->
+            <section id="section-report" class="bg-lab-panel border border-amber-500/30 rounded-2xl p-4 sm:p-6 shadow-xl space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-lab-border pb-4">
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                            <h2 class="text-base font-bold text-stone-100">E. 现场品尝感受记录单 & 单页 A4 实验报告生成</h2>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">已严格锁定单页A4 · 含Canvas 1:1粒径比对卡</span>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-1">
+                            在此填写本次冲煮的主观品尝感受，或保留空白直接点击右侧按钮打印到一页 A4 纸上手写打勾。打印报告自带 1:1 真实物理尺寸的颗粒比对框，方便直接撒粉对照。
+                        </p>
+                    </div>
+                    <button id="btn-print-bottom" type="button" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                        <span>🖨️ 生成并打印单页 A4 报告</span>
+                    </button>
+                </div>
+
+                <!-- Row 1: Meta Info Inputs -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div>
+                        <label class="text-xs text-stone-300 block mb-1">冲煮师 / 记录人</label>
+                        <input id="input-barista" type="text" placeholder="例如：张工 / Lab-01" class="w-full bg-lab-card border border-lab-border rounded-lg px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-stone-300 block mb-1">烘焙日期 / 养豆期批次</label>
+                        <input id="input-roast" type="text" placeholder="例如：养豆第10天 / #2026-10" class="w-full bg-lab-card border border-lab-border rounded-lg px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-stone-300 block mb-1">实测冲煮时间 / 实测液重</label>
+                        <input id="input-actual-time" type="text" placeholder="留空则打印手写横线" class="w-full bg-lab-card border border-lab-border rounded-lg px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-stone-300 block mb-1">实测浓度 TDS / 冲煮水质</label>
+                        <input id="input-actual-tds" type="text" placeholder="例如：1.36% / 50ppm软水" class="w-full bg-lab-card border border-lab-border rounded-lg px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+
+                <!-- Row 2: Subjective Rating Sliders + Flavor Wheel Tags -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <div class="lg:col-span-5 bg-lab-card border border-lab-border rounded-xl p-3.5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-amber-300">主观品尝打分 (1~5分)</span>
+                            <label class="flex items-center gap-1.5 text-[11px] text-stone-400 cursor-pointer">
+                                <input id="chk-print-scores" type="checkbox" checked class="accent-amber-500 rounded">
+                                <span>在A4打印单中勾选此打分</span>
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <div class="flex justify-between mb-1"><span>干/湿香气</span><span id="val-u-aroma" class="font-mono text-amber-400">4.0</span></div>
+                                <input id="slider-u-aroma" type="range" min="1" max="5" step="0.5" value="4.0">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>酸质明亮感</span><span id="val-u-acid" class="font-mono text-amber-400">4.0</span></div>
+                                <input id="slider-u-acid" type="range" min="1" max="5" step="0.5" value="4.0">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>甜感饱满度</span><span id="val-u-sweet" class="font-mono text-amber-400">4.5</span></div>
+                                <input id="slider-u-sweet" type="range" min="1" max="5" step="0.5" value="4.5">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>苦味与收敛感</span><span id="val-u-bitter" class="font-mono text-amber-400">2.0</span></div>
+                                <input id="slider-u-bitter" type="range" min="1" max="5" step="0.5" value="2.0">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>醇厚度(Body)</span><span id="val-u-body" class="font-mono text-amber-400">3.5</span></div>
+                                <input id="slider-u-body" type="range" min="1" max="5" step="0.5" value="3.5">
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1"><span>余韵与干净度</span><span id="val-u-finish" class="font-mono text-amber-400">4.5</span></div>
+                                <input id="slider-u-finish" type="range" min="1" max="5" step="0.5" value="4.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 bg-lab-card border border-lab-border rounded-xl p-3.5 space-y-3">
+                        <div class="text-xs font-semibold text-amber-300">品尝到的风味特征标签 (点击切换，同步至A4打印单)：</div>
+                        <div id="flavor-tags-list" class="flex flex-wrap gap-1.5">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                            <div>
+                                <label class="text-xs text-stone-300 block mb-1">高 / 中 / 低温区风味变化手记：</label>
+                                <textarea id="input-notes-flavor" rows="2" placeholder="例如：热时茉莉花香突出，温凉后蜜桃果甜明显..." class="w-full bg-lab-bg border border-lab-border rounded-lg p-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500"></textarea>
+                            </div>
+                            <div>
+                                <label class="text-xs text-stone-300 block mb-1">下次冲煮调整计划 (Next Calibration)：</label>
+                                <textarea id="input-notes-next" rows="2" placeholder="例如：尾段略慢，下次调粗40μm或水温降1°C..." class="w-full bg-lab-bg border border-lab-border rounded-lg p-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==================== STRICT 1-PAGE A4 PRINTABLE SHEET (VISIBLE ONLY ON PRINT) ==================== -->
+    <div id="print-sheet" class="print-only hidden print-page font-sans">
+        <!-- Header -->
+        <div class="flex items-end justify-between border-b-2 border-slate-900 pb-1 mb-1.5">
             <div>
-              <h2 class="text-sm font-semibold text-amber-50 flex items-center gap-2"><span>⚙️</span> <span>冲煮动力学参数控制台</span></h2>
-              <p class="text-[11px] text-stone-400 mt-0.5">拖动滑块实时解算渗流阻力与风味分子扩散速率</p>
+                <h1 class="text-[13.5px] font-bold tracking-tight text-slate-900">手冲咖啡调豆与萃取动力学实验报告 & 感官品鉴记录单</h1>
+                <p class="text-[8px] text-slate-600 font-mono">POUR-OVER COFFEE EXTRACTION KINETICS REPORT & 1:1 PHYSICAL PARTICLE CALIBRATION SHEET</p>
             </div>
-            <button id="btnReset" class="text-xs text-stone-400 hover:text-amber-400 underline">重置默认</button>
-          </div>
-
-          <div class="space-y-1.5">
-            <div class="flex justify-between items-baseline">
-              <label for="grindSlider" class="text-xs font-medium text-stone-200">研磨粒径 (Grind Size d50)</label>
-              <div class="text-right">
-                <span id="grindVal" class="font-mono text-sm font-bold text-amber-400">620 μm</span>
-                <span id="grindLabel" class="text-[11px] text-stone-400 ml-1">(中细砂糖)</span>
-              </div>
+            <div class="text-right text-[8.5px] font-mono text-slate-700 leading-tight">
+                <div>实验日期：<span id="pr-date">2026-10-17</span> | 记录人：<span id="pr-barista">____________</span></div>
+                <div id="pr-roast" class="text-[8px] text-slate-600">烘焙批次/养豆期：____________</div>
             </div>
-            <input id="grindSlider" type="range" min="300" max="1100" step="10" value="620" class="w-full" />
-            <div class="flex justify-between text-[10px] font-mono text-stone-500">
-              <span>300μm 极细(意式/土耳其)</span>
-              <span>700μm 标准手冲</span>
-              <span>1100μm 粗(法压)</span>
-            </div>
-            <div class="pt-1">
-              <div class="flex justify-between text-[10px] text-stone-400 mb-1">
-                <span>实时粒径分布模拟：</span>
-                <span id="finesRatioText" class="font-mono text-amber-300">极细粉(&lt;100μm): 14.2%</span>
-              </div>
-              <div class="w-full h-2 rounded-full bg-stone-800 overflow-hidden flex">
-                <div id="barFines" class="bg-rose-500/80 h-full transition-all duration-200" style="width: 15%"></div>
-                <div id="barTarget" class="bg-emerald-500/80 h-full transition-all duration-200" style="width: 68%"></div>
-                <div id="barBoulders" class="bg-amber-600/80 h-full transition-all duration-200" style="width: 17%"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-1.5 pt-2 border-t border-stone-800/80">
-            <div class="flex justify-between items-baseline">
-              <label for="tempSlider" class="text-xs font-medium text-stone-200">冲煮水温 (Water Temp)</label>
-              <div>
-                <span id="tempVal" class="font-mono text-sm font-bold text-amber-400">92 °C</span>
-                <span id="tempKineticLabel" class="text-[11px] text-stone-400 ml-1">(高扩散活性)</span>
-              </div>
-            </div>
-            <input id="tempSlider" type="range" min="82" max="98" step="1" value="92" class="w-full" />
-            <div class="flex justify-between text-[10px] font-mono text-stone-500">
-              <span>82°C 低温慢萃</span>
-              <span>90°C 均衡区</span>
-              <span>98°C 沸水高萃</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-stone-800/80">
-            <div class="space-y-1.5">
-              <div class="flex justify-between items-baseline">
-                <label for="doseSlider" class="text-xs font-medium text-stone-200">咖啡粉重 (Dose)</label>
-                <span id="doseVal" class="font-mono text-sm font-bold text-amber-400">15.0 g</span>
-              </div>
-              <input id="doseSlider" type="range" min="10" max="30" step="0.5" value="15" class="w-full" />
-              <div class="flex justify-between text-[10px] font-mono text-stone-500">
-                <span>10g 单人</span>
-                <span>20g 分享</span>
-                <span>30g 大份</span>
-              </div>
-            </div>
-            <div class="space-y-1.5">
-              <div class="flex justify-between items-baseline">
-                <label for="ratioSlider" class="text-xs font-medium text-stone-200">粉水比 (Brew Ratio)</label>
-                <span id="ratioVal" class="font-mono text-sm font-bold text-amber-400">1 : 15.0</span>
-              </div>
-              <input id="ratioSlider" type="range" min="10" max="20" step="0.5" value="15" class="w-full" />
-              <div class="flex justify-between text-[10px] font-mono text-stone-500">
-                <span>1:10 浓郁</span>
-                <span>1:15 标准</span>
-                <span>1:20 清淡</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-espresso-900/90 border border-stone-800 rounded-lg px-3 py-2 flex items-center justify-between text-xs">
-            <span class="text-stone-400">目标总注水量 / 预计咖啡液产出：</span>
-            <span id="waterSummary" class="font-mono font-semibold text-amber-300">225 ml 注水 → 约 195 g 咖啡液</span>
-          </div>
-
-          <div class="space-y-2 pt-2 border-t border-stone-800/80">
-            <label class="text-xs font-medium text-stone-200 block">注水策略与湍流扰动 (Pouring & Agitation)</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button type="button" data-pour="single" class="pour-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">一刀流</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">高水位·快流速·清爽</div>
-              </button>
-              <button type="button" data-pour="three" class="pour-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">三段式(标准)</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">甜感饱满·层次均衡</div>
-              </button>
-              <button type="button" data-pour="pulse" class="pour-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">五段点滴法</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">强扰动·高萃·易堵水</div>
-              </button>
-            </div>
-          </div>
-
-          <div class="space-y-2 pt-2 border-t border-stone-800/80">
-            <label class="text-xs font-medium text-stone-200 block">滤杯几何结构 (Dripper Geometry)</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button type="button" data-dripper="v60" class="dripper-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">V60 锥形60°</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">螺旋导流·高流速上限</div>
-              </button>
-              <button type="button" data-dripper="kalita" class="dripper-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">蛋糕杯平底</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">三孔限流·均匀浸泡</div>
-              </button>
-              <button type="button" data-dripper="origami" class="dripper-btn px-2.5 py-2 rounded-lg border text-left transition">
-                <div class="text-xs font-semibold">折纸滤杯</div>
-                <div class="text-[10px] text-stone-400 mt-0.5">20道深槽·高排气防堵</div>
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Charts & Telemetry -->
-        <section class="lg:col-span-8 space-y-5">
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="glass-card rounded-xl p-3.5 border-l-4 border-l-amber-500">
-              <div class="text-[11px] text-stone-400 flex items-center justify-between">
-                <span>平均萃取率 (EY)</span>
-                <span class="font-mono text-[10px] text-amber-400">金杯 18~22%</span>
-              </div>
-              <div class="mt-1 flex items-baseline gap-2">
-                <span id="kpiEY" class="font-mono text-2xl sm:text-3xl font-bold text-amber-50">20.15%</span>
-              </div>
-              <div id="kpiEYStatus" class="mt-1 text-[11px] font-medium text-emerald-400">✓ 处于黄金萃取区间</div>
-            </div>
-
-            <div class="glass-card rounded-xl p-3.5 border-l-4 border-l-sky-500">
-              <div class="text-[11px] text-stone-400 flex items-center justify-between">
-                <span>咖啡液浓度 (TDS)</span>
-                <span class="font-mono text-[10px] text-sky-400">标准 1.15~1.45%</span>
-              </div>
-              <div class="mt-1 flex items-baseline gap-2">
-                <span id="kpiTDS" class="font-mono text-2xl sm:text-3xl font-bold text-amber-50">1.36%</span>
-              </div>
-              <div id="kpiTDSStatus" class="mt-1 text-[11px] font-medium text-sky-400">醇厚度适中 · 口感清晰</div>
-            </div>
-
-            <div class="glass-card rounded-xl p-3.5 border-l-4 border-l-emerald-500">
-              <div class="text-[11px] text-stone-400 flex items-center justify-between">
-                <span>预计总萃取时间</span>
-                <span id="kpiFlowPeak" class="font-mono text-[10px] text-emerald-400">峰值 3.2 ml/s</span>
-              </div>
-              <div class="mt-1 flex items-baseline gap-2">
-                <span id="kpiTime" class="font-mono text-2xl sm:text-3xl font-bold text-amber-50">02:18</span>
-              </div>
-              <div id="kpiClogStatus" class="mt-1 text-[11px] font-medium text-emerald-400">渗流顺畅 · 无细粉淤积</div>
-            </div>
-
-            <div class="glass-card rounded-xl p-3.5 border-l-4 border-l-rose-500">
-              <div class="text-[11px] text-stone-400 flex items-center justify-between">
-                <span>酸苦平衡指数 (B/A)</span>
-                <span class="font-mono text-[10px] text-rose-400">理想 0.75~1.15</span>
-              </div>
-              <div class="mt-1 flex items-baseline gap-2">
-                <span id="kpiBalance" class="font-mono text-2xl sm:text-3xl font-bold text-amber-50">0.92</span>
-              </div>
-              <div id="kpiFlavorSummary" class="mt-1 text-[11px] font-medium text-amber-300">柑橘花香 · 焦糖甜感突出</div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
-            <div class="glass-card rounded-xl p-4 flex flex-col">
-              <div class="flex items-center justify-between mb-2">
-                <div>
-                  <h3 class="text-xs sm:text-sm font-semibold text-amber-50">SCA 金杯萃取控制图 (EY% vs TDS%)</h3>
-                  <p class="text-[11px] text-stone-400">绿色框为 SCA 经典金杯区，星标为当前豆款推荐甜蜜点</p>
-                </div>
-                <span id="goldCupBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">金杯理想萃取</span>
-              </div>
-              <div class="relative w-full h-[250px] sm:h-[280px]">
-                <canvas id="goldCupChart"></canvas>
-              </div>
-            </div>
-
-            <div class="glass-card rounded-xl p-4 flex flex-col">
-              <div class="flex items-center justify-between mb-2">
-                <div>
-                  <h3 class="text-xs sm:text-sm font-semibold text-amber-50">萃取流速 Q(t) 与累计液重曲线</h3>
-                  <p class="text-[11px] text-stone-400">基于达西定律模拟闷蒸、分段注水水位与尾部细粉堵水衰减</p>
-                </div>
-                <span id="clogRiskBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-stone-800 text-stone-300">堵水风险: 低</span>
-              </div>
-              <div class="relative w-full h-[250px] sm:h-[280px]">
-                <canvas id="flowChart"></canvas>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 xl:grid-cols-12 gap-5">
-            <div class="xl:col-span-7 glass-card rounded-xl p-4 flex flex-col justify-between space-y-4">
-              <div>
-                <div class="flex items-center justify-between">
-                  <h3 class="text-xs sm:text-sm font-semibold text-amber-50">微分溶出动力学：酸、甜、苦涩动态天平</h3>
-                  <span class="text-[11px] font-mono text-stone-400">Noyes-Whitney 分子量分级模型</span>
-                </div>
-                <p class="text-[11px] text-stone-400 mt-0.5">小分子果酸极易溶出（前段主导），梅拉德焦糖甜感中段释出，大分子木质素与绿原酸内酯后段溶出。</p>
-              </div>
-
-              <div class="space-y-3">
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-amber-300 font-medium">🍋 前段小分子有机酸与花果香气 (Acidity & Volatiles)</span>
-                    <span id="barAcidText" class="font-mono text-amber-300">78% 溶出</span>
-                  </div>
-                  <div class="w-full h-3 rounded-full bg-stone-800 overflow-hidden">
-                    <div id="barAcidFill" class="h-full bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full transition-all duration-300" style="width: 78%"></div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-emerald-300 font-medium">🍯 中段梅拉德反应物与焦糖甜感 (Sweetness & Syrup)</span>
-                    <span id="barSweetText" class="font-mono text-emerald-300">84% 溶出</span>
-                  </div>
-                  <div class="w-full h-3 rounded-full bg-stone-800 overflow-hidden">
-                    <div id="barSweetFill" class="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full transition-all duration-300" style="width: 84%"></div>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between text-xs mb-1">
-                    <span class="text-rose-300 font-medium">🍫 尾段大分子苦味素与多酚杂涩 (Bitterness & Astringency)</span>
-                    <span id="barBitterText" class="font-mono text-rose-300">42% 溶出</span>
-                  </div>
-                  <div class="w-full h-3 rounded-full bg-stone-800 overflow-hidden">
-                    <div id="barBitterFill" class="h-full bg-gradient-to-r from-orange-500 to-rose-600 rounded-full transition-all duration-300" style="width: 42%"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="bg-espresso-900/95 border border-amber-500/20 rounded-lg p-3 space-y-1.5">
-                <div class="text-xs font-semibold text-amber-300 flex items-center gap-1.5">
-                  <span>🔬</span> <span>实时调豆诊断与物理机理简析（同步写入 A4 报告）</span>
-                </div>
-                <div id="liveDiagnosisText" class="text-xs text-stone-300 leading-relaxed space-y-1"></div>
-              </div>
-            </div>
-
-            <div class="xl:col-span-5 glass-card rounded-xl p-4 flex flex-col">
-              <div class="flex items-center justify-between mb-1">
-                <h3 class="text-xs sm:text-sm font-semibold text-amber-50">六维感官风味雷达</h3>
-                <span class="text-[10px] font-mono text-amber-400">实线:当前 / 虚线:豆款甜蜜点</span>
-              </div>
-              <div class="relative w-full h-[240px] sm:h-[260px] flex-1">
-                <canvas id="radarChart"></canvas>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <!-- Section 3: Tasting Sheet & A4 Generator -->
-      <section id="tastingSection" class="glass-card rounded-xl p-4 sm:p-6 space-y-5 border border-amber-500/25">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-800 pb-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-mono uppercase tracking-wider text-amber-400">02 / 感官品鉴记录单 & A4 实验报告生成</span>
-              <span class="text-[11px] bg-emerald-500/15 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">支持打印手写或在线录入</span>
-            </div>
-            <p class="text-xs text-stone-400 mt-1">您可以先在此处录入品尝感受再打印，也可以直接点击右侧「生成并打印 A4 报告」打印出带空白勾选框与横线的纸质表格，在冲煮台旁手写记录。</p>
-          </div>
-          <button id="btnPrintBottom" class="px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-amber-500 hover:bg-amber-400 text-espresso-950 shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2 shrink-0">
-            <span>🖨️</span> <span>生成并打印 A4 报告 (含品鉴记录单)</span>
-          </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          <div>
-            <label class="text-xs text-stone-300 block mb-1">冲煮师 / 记录人 (Barista)</label>
-            <input id="inputBarista" type="text" placeholder="例如：张工 / Lab-01" class="w-full bg-espresso-900 border border-stone-700 rounded-lg px-3 py-2 text-xs text-amber-50 focus:outline-none focus:border-amber-500" />
-          </div>
-          <div>
-            <label class="text-xs text-stone-300 block mb-1">批次 / 烘焙日期 (Roast Date & Lot)</label>
-            <input id="inputRoastDate" type="text" placeholder="例如：养豆第12天 / #2026-10" class="w-full bg-espresso-900 border border-stone-700 rounded-lg px-3 py-2 text-xs text-amber-50 focus:outline-none focus:border-amber-500" />
-          </div>
-          <div>
-            <label class="text-xs text-stone-300 block mb-1">实测总时间 / 实测液重</label>
-            <input id="inputActualYield" type="text" placeholder="留空则默认使用仿真值或手写" class="w-full bg-espresso-900 border border-stone-700 rounded-lg px-3 py-2 text-xs text-amber-50 focus:outline-none focus:border-amber-500" />
-          </div>
-          <div>
-            <label class="text-xs text-stone-300 block mb-1">折射仪实测 TDS (%) / 水质 TDS (ppm)</label>
-            <input id="inputActualTDS" type="text" placeholder="例如：1.38% / 农夫山泉 55ppm" class="w-full bg-espresso-900 border border-stone-700 rounded-lg px-3 py-2 text-xs text-amber-50 focus:outline-none focus:border-amber-500" />
-          </div>
+        <!-- Part 1: Bean & Input Parameters -->
+        <div class="mb-1.5">
+            <div class="text-[9.5px] font-bold text-slate-900 mb-0.5">一、实验豆款物理档案与冲煮设定参数 (Bean Profile & Brewing Parameters)</div>
+            <table class="w-full border-collapse print-table text-[8.8px]">
+                <tbody>
+                    <tr class="bg-slate-100">
+                        <th class="text-left w-[12%]">咖啡豆款</th>
+                        <td id="pr-bean-name" class="font-semibold w-[24%]">巴拿马 翡翠庄园 红标瑰夏</td>
+                        <th class="text-left w-[13%]">处理法 / 烘焙</th>
+                        <td id="pr-bean-process" class="w-[21%]">日晒 / 浅烘</td>
+                        <th class="text-left w-[12%]">孔隙率 / 细粉</th>
+                        <td id="pr-bean-phys" class="font-mono w-[18%]">0.56 / 0.92x</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left bg-slate-50">研磨粒径 d50</th>
+                        <td id="pr-grind" class="font-mono font-semibold">660 μm (标准手冲)</td>
+                        <th class="text-left bg-slate-50">比表面积 / 极细粉</th>
+                        <td id="pr-ssa-fines" class="font-mono">88 cm²/g / 11.2%</td>
+                        <th class="text-left bg-slate-50">冲煮水温</th>
+                        <td id="pr-temp" class="font-mono font-semibold">94.0 °C</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left bg-slate-50">粉重 / 粉水比</th>
+                        <td id="pr-ratio" class="font-mono font-semibold">15.0g / 1:15.5</td>
+                        <th class="text-left bg-slate-50">总注水 / 预计液重</th>
+                        <td id="pr-water" class="font-mono">233 ml / 202 g</td>
+                        <th class="text-left bg-slate-50">注水策略 / 滤杯</th>
+                        <td id="pr-technique">三段式分水 / V60 锥形</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-2">
-          <div class="lg:col-span-5 bg-espresso-900/70 rounded-xl p-4 border border-stone-800 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold text-amber-200">主观感官品鉴打分 (1~5分，可留待纸质手写打勾)</span>
-              <label class="flex items-center gap-1.5 text-[11px] text-stone-400 cursor-pointer">
-                <input id="chkUseOnlineScores" type="checkbox" checked class="accent-amber-500 rounded" />
-                <span>在打印报告中填入以下打分</span>
-              </label>
+        <!-- Part 2: Simulation Telemetry + 1:1 Physical Particle Size Canvas Card -->
+        <div class="mb-1.5">
+            <div class="text-[9.5px] font-bold text-slate-900 mb-0.5 flex justify-between items-center">
+                <span>二、萃取动力学模型输出指标 & 1:1 绝对尺寸咖啡粉粒径比对卡 (默认100%打印比例下与真粉等大)</span>
+                <span class="font-normal text-[8px] text-slate-600">可将磨好的咖啡粉直接撒在右侧采样框内肉眼比对</span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              <div>
-                <div class="flex justify-between mb-1"><span>干/湿香气 (Aroma)</span><span id="userScoreAromaVal" class="font-mono text-amber-400">4.0 / 5</span></div>
-                <input id="userScoreAroma" type="range" min="1" max="5" step="0.5" value="4.0" class="w-full" />
-              </div>
-              <div>
-                <div class="flex justify-between mb-1"><span>酸质质感 (Acidity)</span><span id="userScoreAcidVal" class="font-mono text-amber-400">4.0 / 5</span></div>
-                <input id="userScoreAcid" type="range" min="1" max="5" step="0.5" value="4.0" class="w-full" />
-              </div>
-              <div>
-                <div class="flex justify-between mb-1"><span>甜感表现 (Sweetness)</span><span id="userScoreSweetVal" class="font-mono text-amber-400">4.5 / 5</span></div>
-                <input id="userScoreSweet" type="range" min="1" max="5" step="0.5" value="4.5" class="w-full" />
-              </div>
-              <div>
-                <div class="flex justify-between mb-1"><span>苦感强度 (Bitterness)</span><span id="userScoreBitterVal" class="font-mono text-amber-400">2.0 / 5</span></div>
-                <input id="userScoreBitter" type="range" min="1" max="5" step="0.5" value="2.0" class="w-full" />
-              </div>
-              <div>
-                <div class="flex justify-between mb-1"><span>醇厚度/触感 (Body)</span><span id="userScoreBodyVal" class="font-mono text-amber-400">3.5 / 5</span></div>
-                <input id="userScoreBody" type="range" min="1" max="5" step="0.5" value="3.5" class="w-full" />
-              </div>
-              <div>
-                <div class="flex justify-between mb-1"><span>余韵与干净度 (Finish)</span><span id="userScoreFinishVal" class="font-mono text-amber-400">4.0 / 5</span></div>
-                <input id="userScoreFinish" type="range" min="1" max="5" step="0.5" value="4.0" class="w-full" />
-              </div>
-            </div>
-          </div>
+            <table class="w-full border-collapse print-table text-[8.8px] mb-1">
+                <thead>
+                    <tr class="bg-slate-100 text-left">
+                        <th>平均萃取率 (EY%)</th>
+                        <th>咖啡液浓度 (TDS%)</th>
+                        <th>预计总冲煮时间</th>
+                        <th>平均流速 / 达西阻力</th>
+                        <th>通道风险 / 细粉堵塞</th>
+                        <th>SCA 金杯落点诊断</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="font-mono font-semibold">
+                        <td id="pr-ey">20.15%</td>
+                        <td id="pr-tds">1.34%</td>
+                        <td id="pr-time">02:18</td>
+                        <td id="pr-flow-darcy">1.95 ml/s (R=4.2)</td>
+                        <td id="pr-risk">低风险 (α=0.85)</td>
+                        <td id="pr-gold-status" class="font-sans">★ 理想金杯区间</td>
+                    </tr>
+                </tbody>
+            </table>
 
-          <div class="lg:col-span-7 bg-espresso-900/70 rounded-xl p-4 border border-stone-800 space-y-3">
-            <div class="text-xs font-semibold text-amber-200">捕捉到的风味印象（点击高亮，同步勾选至打印单）：</div>
-            <div id="flavorTagContainer" class="flex flex-wrap gap-1.5"></div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <div>
-                <label class="text-xs text-stone-300 block mb-1">高温区 → 中温区 → 低温区风味演变记录：</label>
-                <textarea id="inputTempEvolution" rows="2" placeholder="例如：高温花香明显，降至50°C后蔗糖甜感浮现，冷后酸质转为熟果甜..." class="w-full bg-espresso-950 border border-stone-700 rounded-lg p-2.5 text-xs text-amber-50 focus:outline-none focus:border-amber-500"></textarea>
-              </div>
-              <div>
-                <label class="text-xs text-stone-300 block mb-1">下一次冲煮调豆改进计划 (Next Calibration)：</label>
-                <textarea id="inputNextPlan" rows="2" placeholder="例如：尾段略带微涩，下次研磨度调粗30μm或提前在190g移开滤杯..." class="w-full bg-espresso-950 border border-stone-700 rounded-lg p-2.5 text-xs text-amber-50 focus:outline-none focus:border-amber-500"></textarea>
-              </div>
+            <!-- Side-by-Side: Left Sensory Output + Right 1:1 Physical Canvas -->
+            <div class="grid grid-cols-12 gap-1.5 items-stretch">
+                <div class="col-span-5 flex flex-col justify-between space-y-1">
+                    <div class="print-box flex-1 flex flex-col justify-center">
+                        <div class="font-semibold text-[8.8px] text-slate-800 mb-0.5">酸甜苦涩动态天平占比 (Differential Balance)：</div>
+                        <div id="pr-balance-row" class="text-[8.3px] font-mono text-slate-900">
+                            果酸: 34% | 甜感: 42% | 苦韵: 18% | 杂涩: 6%
+                        </div>
+                    </div>
+                    <div class="print-box flex-1 flex flex-col justify-center">
+                        <div class="font-semibold text-[8.8px] text-slate-800 mb-0.5">六维感官雷达预测评分 (10分制)：</div>
+                        <div id="pr-radar-row" class="text-[8.3px] font-mono text-slate-900">
+                            香气:8.8 | 酸质:8.5 | 甜度:8.7 | 醇厚:7.6 | 余韵:8.2 | 净度:9.0
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1:1 Physical Millimeter Canvas Wrapper (Exact 72mm x 24mm physical size on A4) -->
+                <div class="col-span-7 border border-slate-800 rounded p-1 bg-white flex flex-col items-center justify-center">
+                    <canvas id="canvas-print-particles" width="544" height="184" style="width: 72mm; height: 24.3mm; display: block;"></canvas>
+                </div>
             </div>
-          </div>
         </div>
-      </section>
-    </main>
-  </div>
 
-  <!-- ==================== A4 PRINTABLE REPORT SHEET ==================== -->
-  <div id="printReportContainer" class="print-only hidden print-page font-sans">
-    <div class="flex items-end justify-between border-b-2 border-slate-800 pb-2 mb-3">
-      <div>
-        <h1 class="text-lg font-bold tracking-tight text-slate-900">手冲咖啡萃取动力学实验报告 & 感官品鉴记录单</h1>
-        <p class="text-[10px] text-slate-600 font-mono">POUR-OVER COFFEE EXTRACTION KINETICS REPORT & SENSORY EVALUATION SHEET</p>
-      </div>
-      <div class="text-right text-[10px] font-mono text-slate-700">
-        <div>报告日期：<span id="prDate">2026-10-15</span></div>
-        <div>冲煮记录人：<span id="prBarista">________________</span></div>
-      </div>
+        <!-- Part 3: Concise Parameter Impact Explanations -->
+        <div class="mb-1.5">
+            <div class="text-[9.5px] font-bold text-slate-900 mb-0.5">三、各项设定参数对最终萃取结果的物理机理与风味影响说明 (Parameter Impact Analysis)</div>
+            <table class="w-full border-collapse print-table text-[8.5px] leading-tight">
+                <thead>
+                    <tr class="bg-slate-100 text-left">
+                        <th class="w-[15%]">参数维度</th>
+                        <th class="w-[18%]">当前设定值</th>
+                        <th class="w-[67%]">对渗流动力学及最终杯测风味的具体影响说明</th>
+                    </tr>
+                </thead>
+                <tbody id="pr-impact-tbody">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Part 4: Sensory Tasting Evaluation Form -->
+        <div>
+            <div class="text-[9.5px] font-bold text-slate-900 mb-0.5 flex items-center justify-between">
+                <span>四、现场品尝感受记录单 (Tasting Evaluation & Sensory Log)</span>
+                <span id="pr-actual-measurements" class="font-normal text-[8.2px] text-slate-700">实测时间/液重：__________ | 实测TDS/水质：__________</span>
+            </div>
+
+            <table class="w-full border-collapse print-table text-[8.5px] mb-1">
+                <thead>
+                    <tr class="bg-slate-100 text-left">
+                        <th class="w-[17%]">感官品鉴维度</th>
+                        <th class="w-[45%]">强度与品质等级勾选 (1=极弱/欠佳，3=适中，5=极佳/强烈)</th>
+                        <th class="w-[38%]">感官特征参考描述</th>
+                    </tr>
+                </thead>
+                <tbody id="pr-sensory-tbody">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+
+            <div class="print-box mb-1">
+                <div class="font-semibold text-[8.5px] text-slate-800 mb-0.5">风味轮印象捕捉（请在品尝到的风味前打 ☑）：</div>
+                <div id="pr-flavor-tags" class="text-[8.2px] leading-tight flex flex-wrap gap-x-2.5 gap-y-0.5"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div class="border border-slate-400 rounded p-1.5 h-[42px] flex flex-col justify-between">
+                    <div class="font-semibold text-[8.2px] text-slate-800 border-b border-slate-200 pb-0.5">🌡️ 高 / 中 / 低温区风味演变与口感手记：</div>
+                    <div id="pr-notes-flavor" class="text-[8.2px] text-slate-900 truncate"></div>
+                    <div class="border-b border-dashed border-slate-300 h-1"></div>
+                </div>
+                <div class="border border-slate-400 rounded p-1.5 h-[42px] flex flex-col justify-between">
+                    <div class="font-semibold text-[8.2px] text-slate-800 border-b border-slate-200 pb-0.5">🔧 下次冲煮调豆修正计划 (Next Calibration)：</div>
+                    <div id="pr-notes-next" class="text-[8.2px] text-slate-900 truncate"></div>
+                    <div class="border-b border-dashed border-slate-300 h-1"></div>
+                </div>
+            </div>
+
+            <div class="mt-1 flex justify-between items-center text-[7.8px] text-slate-500 font-mono">
+                <span>综合复刻评价： □ 1星   □ 2星   □ 3星   □ 4星   □ 5星(金杯复刻)</span>
+                <span>Specialty Coffee Extraction Physics Lab · Strict Single-Page A4 Report</span>
+            </div>
+        </div>
     </div>
 
-    <div class="mb-3">
-      <div class="text-xs font-bold text-slate-900 mb-1 flex items-center justify-between">
-        <span>一、实验豆款档案与冲煮设定参数 (Bean Profile & Brewing Parameters)</span>
-        <span id="prRoastLot" class="font-normal text-[10px] text-slate-600">批次/烘焙日期：________________</span>
-      </div>
-      <table class="w-full border-collapse print-table text-[10.5px]">
-        <tbody>
-          <tr class="bg-slate-100">
-            <th class="text-left w-[14%]">咖啡豆款</th>
-            <td id="prBeanName" class="font-semibold w-[22%]">巴拿马 翡翠庄园 红标瑰夏</td>
-            <th class="text-left w-[13%]">产地 / 海拔</th>
-            <td id="prBeanOrigin" class="w-[19%]">波奎特 / 1750m</td>
-            <th class="text-left w-[13%]">处理法 / 烘焙度</th>
-            <td id="prBeanProcess" class="w-[19%]">日晒 / 浅烘 (Agtron 72)</td>
-          </tr>
-          <tr>
-            <th class="text-left bg-slate-50">研磨粒径 d50</th>
-            <td id="prGrind" class="font-mono font-semibold">620 μm (中细砂糖)</td>
-            <th class="text-left bg-slate-50">极细粉占比(&lt;100μm)</th>
-            <td id="prFines" class="font-mono">14.2%</td>
-            <th class="text-left bg-slate-50">冲煮水温</th>
-            <td id="prTemp" class="font-mono font-semibold">92 °C</td>
-          </tr>
-          <tr>
-            <th class="text-left bg-slate-50">粉重 / 粉水比</th>
-            <td id="prDoseRatio" class="font-mono font-semibold">15.0g / 1:15.0</td>
-            <th class="text-left bg-slate-50">总注水 / 预计液重</th>
-            <td id="prWaterYield" class="font-mono">225 ml / 195 g</td>
-            <th class="text-left bg-slate-50">注水策略 / 滤杯</th>
-            <td id="prPourDripper">三段式(标准) / V60 锥形60°</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mb-3">
-      <div class="text-xs font-bold text-slate-900 mb-1">二、萃取动力学模型输出指标 (Simulated Extraction & Sensory Balance Outputs)</div>
-      <table class="w-full border-collapse print-table text-[10.5px]">
-        <thead>
-          <tr class="bg-slate-100 text-left">
-            <th>平均萃取率 (EY%)</th>
-            <th>咖啡液浓度 (TDS%)</th>
-            <th>预计总萃取时间</th>
-            <th>峰值流速 / 堵水风险</th>
-            <th>酸苦平衡比 (B/A)</th>
-            <th>SCA 金杯落点诊断</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="font-mono font-semibold">
-            <td id="prEY">20.15%</td>
-            <td id="prTDS">1.36%</td>
-            <td id="prTime">02:18</td>
-            <td id="prFlowClog">3.2 ml/s (低风险)</td>
-            <td id="prBalance">0.92</td>
-            <td id="prGoldStatus" class="font-sans">金杯理想萃取</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="grid grid-cols-2 gap-2 mt-1.5">
-        <div class="print-box">
-          <div class="font-semibold text-[10.5px] text-slate-800 mb-1">微分溶出率分布 (Noyes-Whitney 分级溶出)：</div>
-          <div class="flex justify-between text-[10px] font-mono">
-            <span>• 前段果酸香气: <strong id="prAcidPct">78%</strong></span>
-            <span>• 中段焦糖甜感: <strong id="prSweetPct">84%</strong></span>
-            <span>• 尾段大分子苦涩: <strong id="prBitterPct">42%</strong></span>
-          </div>
-        </div>
-        <div class="print-box">
-          <div class="font-semibold text-[10.5px] text-slate-800 mb-1">六维感官模型预测分值 (满分100)：</div>
-          <div id="prRadarSummary" class="text-[10px] font-mono text-slate-800">香气:88 | 酸质:85 | 甜感:86 | 醇厚:74 | 余韵:82 | 干净度:88</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <div class="text-xs font-bold text-slate-900 mb-1">三、各项设定参数对最终萃取结果的影响机理说明 (Parameter Impact Analysis)</div>
-      <table class="w-full border-collapse print-table text-[10px] leading-snug">
-        <thead>
-          <tr class="bg-slate-100 text-left">
-            <th class="w-[16%]">控制维度</th>
-            <th class="w-[18%]">当前设定值</th>
-            <th class="w-[66%]">物理渗流机理与对最终杯测风味的具体影响说明</th>
-          </tr>
-        </thead>
-        <tbody id="prImpactTableBody"></tbody>
-      </table>
-    </div>
-
-    <div>
-      <div class="text-xs font-bold text-slate-900 mb-1 flex items-center justify-between">
-        <span>四、现场感官品鉴记录单 (Tasting Evaluation & Sensory Log)</span>
-        <span id="prActualMeasure" class="font-normal text-[10px] text-slate-700">实测液重/时间：____________ | 实测TDS/水质：____________</span>
-      </div>
-
-      <table class="w-full border-collapse print-table text-[10px] mb-2">
-        <thead>
-          <tr class="bg-slate-100 text-left">
-            <th class="w-[18%]">感官评估维度</th>
-            <th class="w-[44%]">强度与品质等级勾选 (1=极弱/欠佳，3=适中，5=极佳/强烈)</th>
-            <th class="w-[38%]">具体感官特征描述参考</th>
-          </tr>
-        </thead>
-        <tbody id="prSensoryFormBody"></tbody>
-      </table>
-
-      <div class="print-box mb-2">
-        <div class="font-semibold text-[10px] text-slate-800 mb-1">风味轮特征捕捉记录（请在品尝到的风味前打 ☑）：</div>
-        <div id="prFlavorCheckboxes" class="text-[10px] leading-relaxed flex flex-wrap gap-x-3 gap-y-1"></div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2.5">
-        <div class="border border-slate-400 rounded p-2 min-h-[78px] flex flex-col justify-between">
-          <div class="font-semibold text-[10px] text-slate-800 border-b border-slate-200 pb-1">🌡️ 高 / 中 / 低温区风味演变与口感复盘：</div>
-          <div id="prNotesEvolution" class="text-[10px] text-slate-800 py-1 whitespace-pre-wrap flex-1"></div>
-          <div class="border-b border-dashed border-slate-300 h-3"></div>
-          <div class="border-b border-dashed border-slate-300 h-3"></div>
-        </div>
-        <div class="border border-slate-400 rounded p-2 min-h-[78px] flex flex-col justify-between">
-          <div class="font-semibold text-[10px] text-slate-800 border-b border-slate-200 pb-1">🔧 下一次冲煮调豆修正方案 (Next Calibration Plan)：</div>
-          <div id="prNotesNextPlan" class="text-[10px] text-slate-800 py-1 whitespace-pre-wrap flex-1"></div>
-          <div class="border-b border-dashed border-slate-300 h-3"></div>
-          <div class="border-b border-dashed border-slate-300 h-3"></div>
-        </div>
-      </div>
-
-      <div class="mt-2 flex justify-between items-center text-[9.5px] text-slate-500 font-mono">
-        <span>综合喜好度评定： □ 1星   □ 2星   □ 3星   □ 4星   □ 5星(金杯复刻)</span>
-        <span>Pour-Over Coffee Extraction Physics Lab · A4 Standard Sheet</span>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const BEAN_MODELS = {
-      geisha: {
-        id: 'geisha',
-        name: '巴拿马 翡翠庄园 红标瑰夏',
-        shortName: '巴拿马红标瑰夏',
-        origin: '波奎特 1750m',
-        process: '日晒 / 浅烘 (Agtron 72)',
-        porosity: 0.92,
-        finesFactor: 1.05,
-        solubilityRate: 1.02,
-        acidPotential: 1.25,
-        sweetPotential: 1.15,
-        bitterPotential: 0.72,
-        flavors: '佛手柑 · 茉莉花 · 水蜜桃 · 蜂蜜',
-        sweetSpot: { grind: 600, temp: 93, dose: 15, ratio: 16, pour: 'three', dripper: 'v60', ey: 20.2, tds: 1.32 },
-        idealRadar: [95, 92, 88, 72, 90, 92]
-      },
-      yirgacheffe: {
-        id: 'yirgacheffe',
-        name: '埃塞俄比亚 耶加雪菲 果丁丁',
-        shortName: '埃塞水洗耶加雪菲',
-        origin: '耶加雪菲 2100m',
-        process: '水洗 / 浅中烘 (Agtron 68)',
-        porosity: 0.88,
-        finesFactor: 1.32,
-        solubilityRate: 0.98,
-        acidPotential: 1.30,
-        sweetPotential: 1.05,
-        bitterPotential: 0.78,
-        flavors: '柠檬皮 · 白色花香 · 红茶感 · 蔗糖',
-        sweetSpot: { grind: 660, temp: 92, dose: 15, ratio: 15.5, pour: 'three', dripper: 'origami', ey: 19.8, tds: 1.34 },
-        idealRadar: [92, 94, 84, 70, 86, 94]
-      },
-      brazil: {
-        id: 'brazil',
-        name: '巴西 喜拉多 甜蜜日晒',
-        shortName: '巴西喜拉多日晒',
-        origin: '米纳斯吉拉斯 1100m',
-        process: '日晒 / 中烘 (Agtron 58)',
-        porosity: 1.18,
-        finesFactor: 0.86,
-        solubilityRate: 1.12,
-        acidPotential: 0.68,
-        sweetPotential: 1.26,
-        bitterPotential: 1.06,
-        flavors: '烤榛子 · 牛奶巧克力 · 花生酱 · 焦糖甜',
-        sweetSpot: { grind: 740, temp: 89, dose: 16, ratio: 15, pour: 'three', dripper: 'kalita', ey: 20.0, tds: 1.41 },
-        idealRadar: [82, 62, 92, 90, 85, 86]
-      },
-      colombia: {
-        id: 'colombia',
-        name: '哥伦比亚 天堂庄园 双重厌氧',
-        shortName: '哥伦比亚厌氧日晒',
-        origin: '考卡省 1950m',
-        process: '厌氧日晒 / 浅中烘 (Agtron 65)',
-        porosity: 1.24,
-        finesFactor: 0.94,
-        solubilityRate: 1.22,
-        acidPotential: 1.18,
-        sweetPotential: 1.28,
-        bitterPotential: 0.95,
-        flavors: '草莓果酱 · 玫瑰酒香 · 百香果 · 可可',
-        sweetSpot: { grind: 700, temp: 89, dose: 15, ratio: 15.5, pour: 'single', dripper: 'v60', ey: 20.4, tds: 1.38 },
-        idealRadar: [96, 86, 94, 84, 88, 82]
-      },
-      mandheling: {
-        id: 'mandheling',
-        name: '印尼 苏门答腊 陈年黄金曼特宁',
-        shortName: '陈年黄金曼特宁',
-        origin: '林东山区 1500m',
-        process: '湿刨法 / 中深烘 (Agtron 48)',
-        porosity: 1.38,
-        finesFactor: 1.12,
-        solubilityRate: 1.28,
-        acidPotential: 0.52,
-        sweetPotential: 1.10,
-        bitterPotential: 1.35,
-        flavors: '雪松木 · 烘焙香料 · 黑巧克力 · 焦糖草本',
-        sweetSpot: { grind: 820, temp: 86, dose: 18, ratio: 13.5, pour: 'single', dripper: 'v60', ey: 19.2, tds: 1.52 },
-        idealRadar: [85, 48, 82, 96, 92, 78]
-      }
-    };
-
-    const POUR_STRATEGIES = {
-      single: { name: '一刀流', agitation: 0.92, contactFactor: 0.88, clogFactor: 0.82, stages: 1 },
-      three:  { name: '三段式(标准)', agitation: 1.04, contactFactor: 1.00, clogFactor: 1.00, stages: 3 },
-      pulse:  { name: '五段点滴法', agitation: 1.16, contactFactor: 1.15, clogFactor: 1.28, stages: 5 }
-    };
-
-    const DRIPPER_MODELS = {
-      v60:     { name: 'V60 锥形60°', flowMultiplier: 1.08, bypass: 0.04, evenness: 0.95 },
-      kalita:  { name: '蛋糕杯平底', flowMultiplier: 0.88, bypass: 0.01, evenness: 1.05 },
-      origami: { name: '折纸滤杯', flowMultiplier: 1.16, bypass: 0.06, evenness: 0.93 }
-    };
-
-    const FLAVOR_WHEEL_TAGS = [
-      '🍋 柑橘/佛手柑', '🌸 茉莉/白花香', '🍑 水蜜桃/核果', '🍓 莓果/酒香',
-      '🍯 蜂蜜/枫糖', '🍬 焦糖/太妃糖', '🌰 烤榛子/杏仁', '🍫 牛奶巧克力',
-      '🍫 黑巧/可可脂', '🌲 雪松/木质香', '🍂 红茶/乌龙茶感', '⚠️ 尖酸/青草生味(欠萃)',
-      '⚠️ 干涩/木质杂苦(过萃)', '💧 水感/寡淡'
-    ];
-
-    const state = {
-      beanId: 'geisha',
-      grind: 620,
-      temp: 92,
-      dose: 15.0,
-      ratio: 15.0,
-      pour: 'three',
-      dripper: 'v60',
-      selectedTags: new Set(['🍋 柑橘/佛手柑', '🌸 茉莉/白花香', '🍯 蜂蜜/枫糖'])
-    };
-
-    let goldCupChart = null;
-    let flowChart = null;
-    let radarChart = null;
-
-    function runSimulation() {
-      const bean = BEAN_MODELS[state.beanId];
-      const pour = POUR_STRATEGIES[state.pour];
-      const dripper = DRIPPER_MODELS[state.dripper];
-
-      const totalWater = state.dose * state.ratio;
-      const beverageWeight = Math.max(totalWater - state.dose * 1.95, totalWater * 0.82);
-
-      const baseFines = 11.5 * Math.pow(650 / state.grind, 1.28) * bean.finesFactor;
-      const finesPct = Math.min(36, Math.max(4.5, baseFines));
-      const bouldersPct = Math.min(35, Math.max(6, (state.grind - 250) / 38));
-      const targetPct = Math.max(30, 100 - finesPct - bouldersPct);
-
-      const clogIndex = (finesPct / 14.0) * pour.clogFactor / (dripper.flowMultiplier * Math.pow(bean.porosity, 0.35));
-
-      const bedDepthFactor = Math.pow(state.dose / 15.0, 0.42);
-      const grindPermeability = Math.pow(650 / state.grind, 1.35);
-      const ratioTimeFactor = Math.pow(state.ratio / 15.0, 0.58);
-      const clogPenalty = clogIndex > 1.25 ? 1 + (clogIndex - 1.25) * 0.55 : 1.0;
-
-      const totalTimeSec = Math.round(
-        132 * bedDepthFactor * grindPermeability * ratioTimeFactor * pour.contactFactor / dripper.flowMultiplier * clogPenalty
-      );
-
-      const tempFactor = Math.exp(0.026 * (state.temp - 91));
-      const surfaceAreaFactor = Math.pow(650 / state.grind, 0.62);
-
-      const rawKineticDrive =
-        bean.solubilityRate *
-        surfaceAreaFactor *
-        tempFactor *
-        Math.pow(totalTimeSec / 135, 0.36) *
-        Math.pow(state.ratio / 15.0, 0.28) *
-        pour.agitation *
-        dripper.evenness;
-
-      const ey = 11.2 + 16.5 * (1 - Math.exp(-0.76 * rawKineticDrive));
-      const tds = (ey * state.dose) / beverageWeight * (1 - dripper.bypass * 0.35);
-
-      const acidExtract = Math.min(99, Math.round(52 + 36 * Math.pow(tempFactor, 0.4) * Math.pow(surfaceAreaFactor, 0.35) * bean.acidPotential * 0.85));
-      const eyDistFromSweetSpot = Math.abs(ey - bean.sweetSpot.ey);
-      const sweetExtract = Math.min(98, Math.max(35, Math.round((88 - eyDistFromSweetSpot * 7.2) * bean.sweetPotential * 0.85)));
-
-      const overExtractPenalty = ey > 20.6 ? Math.pow(ey - 20.6, 1.55) * 8.5 : 0;
-      const tempBitterBoost = state.temp > 92 ? (state.temp - 92) * 3.2 : 0;
-      const bitterExtract = Math.min(99, Math.max(15, Math.round((30 * rawKineticDrive * bean.bitterPotential + overExtractPenalty + tempBitterBoost))));
-
-      const balanceRatio = +(bitterExtract / Math.max(25, acidExtract * 0.62)).toFixed(2);
-
-      const steps = 36;
-      const timeLabels = [];
-      const flowRates = [];
-      const cumulativeMass = [];
-      let currentMass = 0;
-      let peakFlow = 0;
-
-      for (let i = 0; i <= steps; i++) {
-        const progress = i / steps;
-        const t = Math.round(progress * totalTimeSec);
-        timeLabels.push(t + 's');
-
-        let q = 0;
-        if (t < 30) {
-          q = 0.25 * Math.sin((t / 30) * Math.PI);
-        } else {
-          const brewProg = (t - 30) / Math.max(30, totalTimeSec - 30);
-          const stageWave = 1 + 0.22 * Math.sin(brewProg * pour.stages * Math.PI * 2 - Math.PI / 2);
-          const tailDecay = Math.exp(-brewProg * (0.45 + Math.max(0, clogIndex - 0.8) * 1.15));
-          const baseQ = (beverageWeight / (totalTimeSec - 28)) * 1.48;
-          q = Math.max(0.18, baseQ * stageWave * tailDecay);
-        }
-        if (q > peakFlow) peakFlow = q;
-        flowRates.push(+q.toFixed(2));
-
-        if (i > 0) {
-          const dt = totalTimeSec / steps;
-          currentMass += q * dt;
-        }
-        cumulativeMass.push(Math.min(Math.round(beverageWeight), Math.round(currentMass)));
-      }
-      const massScale = beverageWeight / Math.max(1, cumulativeMass[cumulativeMass.length - 1]);
-      for (let i = 0; i < cumulativeMass.length; i++) {
-        cumulativeMass[i] = Math.round(cumulativeMass[i] * massScale);
-      }
-
-      const radarScores = [
-        Math.min(98, Math.max(40, Math.round(bean.idealRadar[0] * (0.85 + (state.temp - 86) * 0.015) - Math.max(0, ey - 22) * 4))),
-        Math.min(98, Math.max(35, Math.round(acidExtract * 0.95))),
-        Math.min(98, Math.max(35, Math.round(sweetExtract * 0.98))),
-        Math.min(98, Math.max(35, Math.round(45 + (tds - 1.0) * 68))),
-        Math.min(98, Math.max(30, Math.round(88 - Math.abs(ey - bean.sweetSpot.ey) * 6.5 - Math.max(0, clogIndex - 1.2) * 12))),
-        Math.min(98, Math.max(30, Math.round(94 - Math.max(0, clogIndex - 1.0) * 22 - Math.max(0, bitterExtract - 55) * 0.6)))
-      ];
-
-      return {
-        bean, pour, dripper,
-        totalWater: Math.round(totalWater),
-        beverageWeight: Math.round(beverageWeight),
-        finesPct: +finesPct.toFixed(1),
-        targetPct: +targetPct.toFixed(1),
-        bouldersPct: +bouldersPct.toFixed(1),
-        clogIndex: +clogIndex.toFixed(2),
-        totalTimeSec,
-        peakFlow: +peakFlow.toFixed(2),
-        ey: +ey.toFixed(2),
-        tds: +tds.toFixed(2),
-        acidExtract, sweetExtract, bitterExtract, balanceRatio,
-        timeLabels, flowRates, cumulativeMass, radarScores
-      };
-    }
-
-    function formatTime(sec) {
-      const m = Math.floor(sec / 60);
-      const s = sec % 60;
-      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-    }
-
-    function getGrindDesc(um) {
-      if (um < 420) return '极细粉 (接近意式/摩卡壶)';
-      if (um < 550) return '细砂糖 (浅烘高萃/爱乐压)';
-      if (um < 700) return '中细砂糖 (标准手冲黄金区)';
-      if (um < 860) return '中粗粗砂糖 (中深烘/法压细)';
-      return '粗盐粒 (法压壶/冷萃)';
-    }
-
-    function generateParameterImpacts(sim) {
-      const grindImpact = state.grind < 520
-        ? `当前粒径偏细（${state.grind}μm），比表面积显著增大，极细粉占比达 ${sim.finesPct}%，大幅提升了前中段溶出速率，但也使达西渗流阻力激增，尾段易发生微孔堵塞并析出木质杂苦。`
-        : state.grind > 780
-        ? `当前粒径偏粗（${state.grind}μm），粉层孔隙率高、水流穿透极快，有效抑制了后段大分子苦涩物溶出（干净度高），但颗粒内部扩散路径变长，若水温不足易导致整体萃取率偏低。`
-        : `当前处于手冲黄金中细粒径区（${state.grind}μm），极细粉占比控制在 ${sim.finesPct}%，兼顾了颗粒内溶质扩散效率与粉床渗流顺畅度，有利于甜感充分展开。`;
-
-      const tempImpact = state.temp >= 93
-        ? `高温冲煮（${state.temp}°C）赋予水分子高动能，显著加速香气挥发物与柠檬酸/苹果酸的溶出，适合浅烘高密度豆；但对中深烘豆会加速绿原酸内酯与焦苦味析出。`
-        : state.temp <= 88
-        ? `中低温冲煮（${state.temp}°C）温和抑制了尾段大分子多酚与焦苦物质的扩散速率，口感圆润顺滑、苦涩感极低，非常适合中深烘或高孔隙率厌氧豆。`
-        : `均衡水温（${state.temp}°C）在花果酸质激发与梅拉德焦糖甜感溶出之间取得良好平衡，不易出现尖酸或焦苦。`;
-
-      const ratioImpact = state.ratio <= 13.5
-        ? `低粉水比（1:${state.ratio}）属于高浓度冲煮，液相溶质浓度梯度高，成杯 TDS 高达 ${sim.tds}%（醇厚度极佳），但溶剂总量有限，整体萃取率（EY ${sim.ey}%）会受饱和度限制。`
-        : state.ratio >= 16.5
-        ? `高粉水比（1:${state.ratio}）提供充沛的清水溶剂，持续维持固液两相浓度差，推高了总萃取率（EY ${sim.ey}%），茶感明显、层次清晰，但醇厚度（TDS ${sim.tds}%）相对清淡。`
-        : `标准粉水比（1:${state.ratio}，${state.dose}g粉注水${sim.totalWater}ml）让浓度（TDS ${sim.tds}%）与萃取率（EY ${sim.ey}%）同步落入平衡带，兼顾甜感与醇厚度。`;
-
-      const pourDripperImpact = `${sim.pour.name}配合${sim.dripper.name}：${
-        state.pour === 'single'
-          ? '单次连续注水抬高了液面静水压，流速快（峰值 ' + sim.peakFlow + ' ml/s），尾段杂味少、口感干净明快。'
-          : state.pour === 'pulse'
-          ? '多段脉冲注水反复翻动粉层，延长了固液接触时间至 ' + formatTime(sim.totalTimeSec) + '，大幅提高萃取率与甜感，但细粉向底部滤纸迁移明显。'
-          : '经典三段式注水在前段充分排气闷蒸后，中段稳定建立水位萃取甜感，尾段适度冲刷，层次感最稳定。'
-      }`;
-
-      return [
-        { dim: '研磨度与粒径分布', val: `${state.grind} μm (细粉 ${sim.finesPct}%)`, desc: grindImpact },
-        { dim: '冲煮水温热力学', val: `${state.temp} °C`, desc: tempImpact },
-        { dim: '粉量与粉水比', val: `${state.dose}g / 1:${state.ratio}`, desc: ratioImpact },
-        { dim: '注水扰动与滤杯几何', val: `${sim.pour.name} + ${sim.dripper.name}`, desc: pourDripperImpact }
-      ];
-    }
-
-    function renderBeanSelector() {
-      const container = document.getElementById('beanSelectorGrid');
-      container.innerHTML = '';
-      Object.values(BEAN_MODELS).forEach(b => {
-        const active = b.id === state.beanId;
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `text-left p-2.5 rounded-xl border transition flex flex-col justify-between ${
-          active
-            ? 'bg-amber-500/20 border-amber-400 shadow-md shadow-amber-500/10'
-            : 'bg-espresso-900/70 border-stone-800 hover:border-stone-600'
-        }`;
-        btn.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between gap-1">
-              <span class="text-xs font-bold ${active ? 'text-amber-300' : 'text-stone-200'}">${b.shortName}</span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${active ? 'bg-amber-400 text-espresso-950 font-semibold' : 'bg-stone-800 text-stone-400'}">${b.process.split('/')[1].trim()}</span>
-            </div>
-            <div class="text-[10px] text-stone-400 mt-0.5">${b.origin} · ${b.process.split('/')[0].trim()}</div>
-          </div>
-          <div class="text-[10px] text-amber-200/80 mt-2 truncate">✦ ${b.flavors}</div>
-        `;
-        btn.addEventListener('click', () => {
-          state.beanId = b.id;
-          renderBeanSelector();
-          updateAll();
-        });
-        container.appendChild(btn);
-      });
-    }
-
-    function renderFlavorTags() {
-      const container = document.getElementById('flavorTagContainer');
-      container.innerHTML = '';
-      FLAVOR_WHEEL_TAGS.forEach(tag => {
-        const selected = state.selectedTags.has(tag);
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `px-2.5 py-1 rounded-full text-xs border transition ${
-          selected
-            ? 'bg-amber-500 text-espresso-950 font-semibold border-amber-400'
-            : 'bg-espresso-950 text-stone-300 border-stone-700 hover:border-stone-500'
-        }`;
-        btn.textContent = (selected ? '☑ ' : '☐ ') + tag;
-        btn.addEventListener('click', () => {
-          if (state.selectedTags.has(tag)) state.selectedTags.delete(tag);
-          else state.selectedTags.add(tag);
-          renderFlavorTags();
-          syncPrintSheet(runSimulation());
-        });
-        container.appendChild(btn);
-      });
-    }
-
-    function initCharts() {
-      Chart.defaults.color = '#a8a29e';
-      Chart.defaults.font.family = "'Inter', 'JetBrains Mono', sans-serif";
-
-      const gcCtx = document.getElementById('goldCupChart').getContext('2d');
-      const goldBoxPlugin = {
-        id: 'goldBoxPlugin',
-        beforeDraw(chart) {
-          const { ctx, scales: { x, y } } = chart;
-          const x1 = x.getPixelForValue(18);
-          const x2 = x.getPixelForValue(22);
-          const y1 = y.getPixelForValue(1.45);
-          const y2 = y.getPixelForValue(1.15);
-          ctx.save();
-          ctx.fillStyle = 'rgba(16, 185, 129, 0.12)';
-          ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
-          ctx.lineWidth = 1.5;
-          ctx.setLineDash([4, 4]);
-          ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
-          ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-          ctx.fillStyle = 'rgba(52, 211, 153, 0.8)';
-          ctx.font = '10px "JetBrains Mono", sans-serif';
-          ctx.fillText('SCA 金杯理想区 (18-22% / 1.15-1.45%)', x1 + 6, y1 + 14);
-          ctx.restore();
-        }
-      };
-
-      goldCupChart = new Chart(gcCtx, {
-        type: 'scatter',
-        data: {
-          datasets: [
-            {
-              label: '当前冲煮工作点',
-              data: [{ x: 20.1, y: 1.36 }],
-              backgroundColor: '#f59e0b',
-              borderColor: '#fffbeb',
-              borderWidth: 2,
-              pointRadius: 8,
-              pointHoverRadius: 10
+    <script>
+        /**
+         * 1. 精品咖啡豆款预设数据库（新增：巴西 喜拉多 甜蜜日晒 中烘）
+         */
+        const BEAN_PRESETS = {
+            geisha: {
+                id: 'geisha',
+                name: '巴拿马 翡翠庄园 红标瑰夏',
+                process: '日晒 / 浅烘 (Natural Light)',
+                notes: '佛手柑 · 茉莉花 · 水蜜桃 · 蜂蜜',
+                porosity: 0.56,
+                porosityLabel: '中偏紧 (0.56)',
+                solubilityFactor: 1.02,
+                finesFactor: 0.92,
+                finesLabel: '较低 (0.92x)',
+                roastLabel: '浅烘 / 高花果香',
+                acidPotential: 9.5,
+                sweetPotential: 9.2,
+                bitterThreshold: 21.8,
+                optimal: {
+                    grind: 660,
+                    temp: 94.0,
+                    ratio: 15.5,
+                    agitation: 'three-stage',
+                    dripper: 'v60'
+                }
             },
-            {
-              label: '当前豆款推荐甜蜜点',
-              data: [{ x: 20.2, y: 1.32 }],
-              backgroundColor: '#10b981',
-              borderColor: '#ecfdf5',
-              borderWidth: 1.5,
-              pointStyle: 'star',
-              pointRadius: 7
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            x: { min: 14, max: 25, title: { display: true, text: '萃取率 Extraction Yield (EY %)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
-            y: { min: 0.85, max: 1.85, title: { display: true, text: '浓度 Strength (TDS %)', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.06)' } }
-          },
-          plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }
-        },
-        plugins: [goldBoxPlugin]
-      });
-
-      const flowCtx = document.getElementById('flowChart').getContext('2d');
-      flowChart = new Chart(flowCtx, {
-        type: 'line',
-        data: {
-          labels: [],
-          datasets: [
-            {
-              label: '瞬时流速 Q(t) [ml/s]',
-              data: [],
-              borderColor: '#f59e0b',
-              backgroundColor: 'rgba(245, 158, 11, 0.16)',
-              fill: true,
-              tension: 0.38,
-              yAxisID: 'y',
-              pointRadius: 0
+            yirgacheffe: {
+                id: 'yirgacheffe',
+                name: '埃塞俄比亚 耶加雪菲 科契尔',
+                process: '水洗 / 浅中烘 (Washed Light-Med)',
+                notes: '柠檬皮 · 白色花香 · 红茶甜韵',
+                porosity: 0.50,
+                porosityLabel: '紧实 (0.50)',
+                solubilityFactor: 0.96,
+                finesFactor: 1.28,
+                finesLabel: '偏高 (1.28x 易堵)',
+                roastLabel: '浅中烘 / 柑橘茶感',
+                acidPotential: 9.2,
+                sweetPotential: 8.6,
+                bitterThreshold: 21.2,
+                optimal: {
+                    grind: 720,
+                    temp: 92.5,
+                    ratio: 15.0,
+                    agitation: 'three-stage',
+                    dripper: 'v60'
+                }
             },
-            {
-              label: '累计咖啡液重 M(t) [g]',
-              data: [],
-              borderColor: '#38bdf8',
-              borderDash: [4, 4],
-              tension: 0.3,
-              yAxisID: 'y1',
-              pointRadius: 0
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-            y: { type: 'linear', position: 'left', min: 0, max: 5.5, title: { display: true, text: '流速 (ml/s)', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.06)' } },
-            y1: { type: 'linear', position: 'right', min: 0, title: { display: true, text: '累计液重 (g)', font: { size: 10 } }, grid: { drawOnChartArea: false } }
-          },
-          plugins: { legend: { labels: { boxWidth: 10, font: { size: 11 } } } }
-        }
-      });
-
-      const radarCtx = document.getElementById('radarChart').getContext('2d');
-      radarChart = new Chart(radarCtx, {
-        type: 'radar',
-        data: {
-          labels: ['干湿香气', '酸质明亮', '焦糖甜感', '醇厚触感', '余韵悠长', '干净度'],
-          datasets: [
-            {
-              label: '当前冲煮风味画像',
-              data: [85, 85, 85, 75, 80, 85],
-              backgroundColor: 'rgba(245, 158, 11, 0.25)',
-              borderColor: '#f59e0b',
-              pointBackgroundColor: '#fbbf24',
-              borderWidth: 2
+            brazil: {
+                id: 'brazil',
+                name: '巴西 喜拉多 甜蜜日晒 (新增)',
+                process: '日晒 / 中烘 (Natural Medium)',
+                notes: '烤榛子 · 牛奶巧克力 · 花生酱 · 焦糖',
+                porosity: 0.68,
+                porosityLabel: '较疏松 (0.68)',
+                solubilityFactor: 1.10,
+                finesFactor: 0.86,
+                finesLabel: '低细粉 (0.86x)',
+                roastLabel: '中烘 / 坚果可可甜',
+                acidPotential: 6.4,
+                sweetPotential: 9.3,
+                bitterThreshold: 20.6,
+                optimal: {
+                    grind: 750,
+                    temp: 89.0,
+                    ratio: 15.0,
+                    agitation: 'three-stage',
+                    dripper: 'kalita'
+                }
             },
-            {
-              label: '豆款甜蜜点参考',
-              data: [90, 90, 88, 72, 90, 92],
-              backgroundColor: 'rgba(16, 185, 129, 0.08)',
-              borderColor: 'rgba(16, 185, 129, 0.65)',
-              borderDash: [3, 3],
-              pointRadius: 2,
-              borderWidth: 1.5
+            colombia_anaerobic: {
+                id: 'colombia_anaerobic',
+                name: '哥伦比亚 天堂庄园 厌氧日晒',
+                process: '双重厌氧 / 中烘 (Anaerobic Med)',
+                notes: '草莓酒心 · 热带水果 · 朗姆可可',
+                porosity: 0.74,
+                porosityLabel: '疏松多孔 (0.74)',
+                solubilityFactor: 1.18,
+                finesFactor: 1.05,
+                finesLabel: '中等 (1.05x)',
+                roastLabel: '中烘 / 强发酵易萃',
+                acidPotential: 8.5,
+                sweetPotential: 9.4,
+                bitterThreshold: 20.4,
+                optimal: {
+                    grind: 780,
+                    temp: 89.0,
+                    ratio: 15.0,
+                    agitation: 'gentle',
+                    dripper: 'kalita'
+                }
+            },
+            mandheling: {
+                id: 'mandheling',
+                name: '印尼 曼特宁 陈年黄金鼎上',
+                process: '湿刨法 / 中深烘 (Wet-Hulled Dark)',
+                notes: '黑巧焦糖 · 雪松木 · 烘焙坚果 · 甘草',
+                porosity: 0.82,
+                porosityLabel: '极高孔隙 (0.82)',
+                solubilityFactor: 1.24,
+                finesFactor: 1.12,
+                finesLabel: '中偏高 (1.12x)',
+                roastLabel: '中深烘 / 醇厚低酸',
+                acidPotential: 5.5,
+                sweetPotential: 8.8,
+                bitterThreshold: 19.6,
+                optimal: {
+                    grind: 860,
+                    temp: 85.5,
+                    ratio: 13.5,
+                    agitation: 'gentle',
+                    dripper: 'kalita'
+                }
             }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              min: 20, max: 100,
-              ticks: { display: false, stepSize: 20 },
-              grid: { color: 'rgba(255,255,255,0.08)' },
-              angleLines: { color: 'rgba(255,255,255,0.08)' },
-              pointLabels: { color: '#e7e5e4', font: { size: 11 } }
+        };
+
+        const FLAVOR_TAGS = [
+            '🍋 柑橘/佛手柑', '🌸 茉莉/白花香', '🍑 水蜜桃/杏桃', '🍓 草莓/热带熟果',
+            '🍯 蜂蜜/蔗糖甜', '🍬 焦糖/太妃糖', '🌰 烤榛子/花生酱', '🍫 牛奶巧克力',
+            '🍫 黑巧/可可韵', '🌲 雪松/香料木质', '🍂 红茶/乌龙茶感', '⚠️ 尖酸/青草味(欠萃)',
+            '⚠️ 干涩/木质苦(过萃)', '💧 薄水感/寡淡'
+        ];
+
+        /**
+         * 2. 全局实验室内存状态 (不使用 localStorage 防止沙盒安全异常)
+         */
+        const state = {
+            beanId: 'geisha',
+            dose: 15.0,
+            grind: 660,
+            temp: 94.0,
+            ratio: 15.5,
+            agitation: 'three-stage',
+            dripper: 'v60',
+            baseDpr: window.devicePixelRatio || 1,
+            screenCalib: 1.00,
+            showCalibPanel: false,
+            selectedTags: new Set(['🍋 柑橘/佛手柑', '🌸 茉莉/白花香', '🍯 蜂蜜/蔗糖甜']),
+            sim: null
+        };
+
+        /**
+         * 3. 达西渗流与 Noyes-Whitney 萃取动力学解算引擎
+         */
+        function runPhysicsSimulation() {
+            const bean = BEAN_PRESETS[state.beanId];
+            const dose = state.dose;
+            const totalWater = dose * state.ratio;
+
+            const ssa = Math.round((60000 / state.grind) * (0.9 + bean.porosity * 0.25));
+            const baseFinesPct = Math.pow(750 / state.grind, 1.35) * 9.5 * bean.finesFactor;
+            const finesPct = Math.min(34, Math.max(4.5, baseFinesPct));
+
+            const agitationMap = {
+                'single': { turb: 1.24, finesMigration: 1.30, timeFactor: 0.82, label: '一刀流快冲' },
+                'three-stage': { turb: 1.05, finesMigration: 1.00, timeFactor: 1.00, label: '三段式分水' },
+                'gentle': { turb: 0.84, finesMigration: 0.72, timeFactor: 1.22, label: '点滴柔水慢冲' }
+            };
+            const dripperMap = {
+                'v60': { flowConductance: 1.22, contactTimeFactor: 0.88, uniformity: 0.92, label: 'V60 锥形滤杯' },
+                'kalita': { flowConductance: 0.92, contactTimeFactor: 1.08, uniformity: 1.08, label: 'Kalita 平底滤杯' },
+                'hybrid': { flowConductance: 0.78, contactTimeFactor: 1.25, uniformity: 1.12, label: '浸渍复合滤杯' }
+            };
+
+            const agi = agitationMap[state.agitation];
+            const drp = dripperMap[state.dripper];
+
+            const permeabilityK = Math.pow(state.grind / 700, 1.85) * drp.flowConductance;
+            const clogIndex = (finesPct / 12) * agi.finesMigration * (700 / state.grind);
+            const isStalling = clogIndex > 1.65;
+
+            const rawDarcy = (2.2 / permeabilityK) * (0.7 + 0.35 * clogIndex);
+            const darcyIndex = Math.min(9.9, Math.max(1.0, rawDarcy * 1.45));
+
+            let baseTime = 32 + (totalWater / 3.0) * Math.pow(700 / state.grind, 1.15) * agi.timeFactor * drp.contactTimeFactor;
+            if (clogIndex > 1.3) {
+                baseTime += Math.pow(clogIndex - 1.1, 1.8) * 38;
             }
-          },
-          plugins: { legend: { display: false } }
+            const totalTime = Math.min(260, Math.max(65, Math.round(baseTime)));
+            const avgFlowRate = totalWater / totalTime;
+
+            const tempFactor = Math.exp(0.026 * (state.temp - 91.0));
+            const grindExtractionFactor = Math.pow(700 / state.grind, 0.58);
+            const ratioFactor = 1 + (state.ratio - 15) * 0.026;
+            const timeExtractionFactor = Math.pow(totalTime / 135, 0.28) * Math.pow(agi.turb, 0.32) * Math.pow(drp.uniformity, 0.25);
+
+            let ey = 19.8 * bean.solubilityFactor * tempFactor * grindExtractionFactor * ratioFactor * timeExtractionFactor;
+            ey = Math.min(25.8, Math.max(14.0, ey));
+
+            const waterRetained = dose * (1.85 + bean.porosity * 0.4);
+            const beverageWeight = Math.max(dose * 5, totalWater - waterRetained + (dose * ey / 100));
+            const tds = (dose * (ey / 100)) / beverageWeight * 100;
+
+            let channelingRisk = 8;
+            if (state.grind < 520) channelingRisk += (520 - state.grind) * 0.14;
+            if (state.agitation === 'single') channelingRisk += 15;
+            if (state.dripper === 'v60') channelingRisk += 8;
+            channelingRisk = Math.min(88, Math.max(5, Math.round(channelingRisk)));
+
+            const kineticsSeries = [];
+            const maxPlotTime = Math.max(180, Math.min(240, Math.ceil((totalTime + 20) / 30) * 30));
+            let accumulatedMass = 0;
+
+            for (let t = 0; t <= maxPlotTime; t += 2) {
+                let flow = 0;
+                if (t <= totalTime) {
+                    if (t < 30) {
+                        flow = Math.sin((t / 30) * Math.PI) * 0.45 * permeabilityK;
+                    } else {
+                        const pourPhase = (t - 30) / (totalTime - 30);
+                        let envelope = Math.sin(Math.pow(pourPhase, 0.65) * Math.PI);
+                        let pulse = 1.0;
+                        if (state.agitation === 'three-stage') {
+                            pulse = 0.85 + 0.32 * Math.sin(pourPhase * Math.PI * 3.2);
+                        } else if (state.agitation === 'single') {
+                            pulse = 1.35 * Math.exp(-pourPhase * 0.9);
+                        } else {
+                            pulse = 0.95 + 0.08 * Math.sin(pourPhase * Math.PI * 6);
+                        }
+                        let stallDecay = 1.0;
+                        if (clogIndex > 1.25 && pourPhase > 0.5) {
+                            stallDecay = Math.exp(-Math.pow((pourPhase - 0.5) * clogIndex * 1.4, 2));
+                        }
+                        flow = Math.max(0.12, envelope * pulse * stallDecay * avgFlowRate * 1.65);
+                    }
+                }
+                kineticsSeries.push({ t, rawFlow: flow });
+            }
+
+            const sumRawMass = kineticsSeries.reduce((acc, pt) => acc + pt.rawFlow * 2, 0) || 1;
+            const scaleFactor = beverageWeight / sumRawMass;
+            kineticsSeries.forEach(pt => {
+                pt.flow = pt.rawFlow * scaleFactor;
+                accumulatedMass += pt.flow * 2;
+                pt.mass = Math.min(beverageWeight, accumulatedMass);
+                pt.massRatio = pt.mass / beverageWeight;
+            });
+
+            const idealEyCenter = bean.bitterThreshold - 1.2;
+            const eyDelta = ey - idealEyCenter;
+
+            let rawAcid = bean.acidPotential * (1.15 - 0.055 * (ey - 16)) * (0.9 + (state.temp - 88) * 0.015);
+            let rawSweet = bean.sweetPotential * Math.exp(-Math.pow(eyDelta / 2.6, 2)) * drp.uniformity;
+            let rawBitter = 2.8 + Math.pow(Math.max(0, ey - 16.5), 1.65) * 0.38 * (1 + (state.temp - 90) * 0.03);
+            let rawAstringent = 1.0 + (channelingRisk / 22) + (isStalling ? 2.8 : 0) + Math.max(0, ey - bean.bitterThreshold) * 1.6;
+
+            rawAcid = Math.max(1, rawAcid);
+            rawSweet = Math.max(1, rawSweet);
+            rawBitter = Math.max(0.8, rawBitter);
+            rawAstringent = Math.max(0.5, rawAstringent);
+
+            const sumFlavor = rawAcid + rawSweet + rawBitter + rawAstringent;
+            const flavorPct = {
+                acid: Math.round((rawAcid / sumFlavor) * 100),
+                sweet: Math.round((rawSweet / sumFlavor) * 100),
+                bitter: Math.round((rawBitter / sumFlavor) * 100),
+                astringent: 0
+            };
+            flavorPct.astringent = Math.max(2, 100 - flavorPct.acid - flavorPct.sweet - flavorPct.bitter);
+
+            const clampScore = (v) => Math.min(9.8, Math.max(5.0, Number(v.toFixed(1))));
+            const radarScores = {
+                aroma: clampScore(7.2 + (state.temp - 85) * 0.12 + (bean.acidPotential - 7) * 0.35 - Math.abs(eyDelta) * 0.18),
+                acidity: clampScore(6.5 + (bean.acidPotential - 6) * 0.55 - Math.abs(ey - (idealEyCenter - 0.5)) * 0.32),
+                sweetness: clampScore(6.2 + (bean.sweetPotential - 6.5) * 0.65 * Math.exp(-Math.pow(eyDelta / 2.5, 2)) * drp.uniformity),
+                body: clampScore(5.8 + (tds - 1.0) * 4.2 + (1 - bean.porosity) * 0.8),
+                aftertaste: clampScore(8.6 - Math.abs(eyDelta) * 0.38 - (flavorPct.astringent * 0.08)),
+                cleanliness: clampScore(9.4 - (channelingRisk * 0.035) - (isStalling ? 1.2 : 0) - Math.max(0, ey - bean.bitterThreshold) * 0.45)
+            };
+
+            state.sim = {
+                bean,
+                agi,
+                drp,
+                totalWater,
+                beverageWeight,
+                ssa,
+                finesPct,
+                permeabilityK,
+                clogIndex,
+                isStalling,
+                darcyIndex,
+                totalTime,
+                avgFlowRate,
+                ey,
+                tds,
+                channelingRisk,
+                tempFactor,
+                kineticsSeries,
+                maxPlotTime,
+                flavorPct,
+                radarScores,
+                idealEyCenter
+            };
         }
-      });
-    }
 
-    function syncPrintSheet(sim) {
-      const now = new Date();
-      document.getElementById('prDate').textContent = now.toISOString().slice(0, 10);
-      const barista = document.getElementById('inputBarista').value.trim();
-      document.getElementById('prBarista').textContent = barista || '________________';
-      const roastLot = document.getElementById('inputRoastDate').value.trim();
-      document.getElementById('prRoastLot').textContent = '批次/烘焙日期：' + (roastLot || '________________');
-      const actualYield = document.getElementById('inputActualYield').value.trim();
-      const actualTDS = document.getElementById('inputActualTDS').value.trim();
-      document.getElementById('prActualMeasure').textContent =
-        `实测液重/时间：${actualYield || '____________'} | 实测TDS/水质：${actualTDS || '____________'}`;
+        /**
+         * 4. 原生 Canvas 绘制 1:1 绝对尺寸咖啡粉粒径比对卡 (同时支持网页抗缩放渲染与 A4 打印高清渲染)
+         * 物理宽度恒定为 72.0 mm，高度恒定为 24.3 mm
+         */
+        function drawPhysicalParticlesCanvas(canvasId, isPrintMode) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || !state.sim) return;
 
-      document.getElementById('prBeanName').textContent = sim.bean.name;
-      document.getElementById('prBeanOrigin').textContent = sim.bean.origin;
-      document.getElementById('prBeanProcess').textContent = sim.bean.process;
-      document.getElementById('prGrind').textContent = `${state.grind} μm (${getGrindDesc(state.grind).split(' ')[0]})`;
-      document.getElementById('prFines').textContent = `${sim.finesPct}%`;
-      document.getElementById('prTemp').textContent = `${state.temp} °C`;
-      document.getElementById('prDoseRatio').textContent = `${state.dose.toFixed(1)}g / 1:${state.ratio.toFixed(1)}`;
-      document.getElementById('prWaterYield').textContent = `${sim.totalWater} ml / 约 ${sim.beverageWeight} g`;
-      document.getElementById('prPourDripper').textContent = `${sim.pour.name} / ${sim.dripper.name}`;
+            const physicalWidthMm = 72.0;
+            const physicalHeightMm = 24.3;
 
-      document.getElementById('prEY').textContent = `${sim.ey}%`;
-      document.getElementById('prTDS').textContent = `${sim.tds}%`;
-      document.getElementById('prTime').textContent = formatTime(sim.totalTimeSec);
-      const clogLabel = sim.clogIndex > 1.35 ? '高风险(易堵)' : sim.clogIndex > 1.1 ? '中等' : '低风险(顺畅)';
-      document.getElementById('prFlowClog').textContent = `${sim.peakFlow} ml/s (${clogLabel})`;
-      document.getElementById('prBalance').textContent = sim.balanceRatio;
-      document.getElementById('prGoldStatus').textContent = document.getElementById('goldCupBadge').textContent;
+            // CSS 标准中 1mm = 96 / 25.4 ≈ 3.779527559 px
+            const cssPxPerMm = 96 / 25.4;
+            const dpr = isPrintMode ? 4.0 : (window.devicePixelRatio || 1);
 
-      document.getElementById('prAcidPct').textContent = `${sim.acidExtract}%`;
-      document.getElementById('prSweetPct').textContent = `${sim.sweetExtract}%`;
-      document.getElementById('prBitterPct').textContent = `${sim.bitterExtract}%`;
+            const targetCssW = physicalWidthMm * cssPxPerMm;
+            const targetCssH = physicalHeightMm * cssPxPerMm;
 
-      const r = sim.radarScores;
-      document.getElementById('prRadarSummary').textContent =
-        `香气:${r[0]} | 酸质:${r[1]} | 甜感:${r[2]} | 醇厚:${r[3]} | 余韵:${r[4]} | 干净度:${r[5]}`;
+            if (!isPrintMode) {
+                canvas.style.width = `${targetCssW.toFixed(2)}px`;
+                canvas.style.height = `${targetCssH.toFixed(2)}px`;
+            }
 
-      const impacts = generateParameterImpacts(sim);
-      document.getElementById('prImpactTableBody').innerHTML = impacts.map(item => `
-        <tr>
-          <td class="font-semibold bg-slate-50">${item.dim}</td>
-          <td class="font-mono">${item.val}</td>
-          <td>${item.desc}</td>
-        </tr>
-      `).join('');
+            canvas.width = Math.round(targetCssW * dpr);
+            canvas.height = Math.round(targetCssH * dpr);
 
-      const useOnlineScores = document.getElementById('chkUseOnlineScores').checked;
-      const sensoryRows = [
-        { name: '干/湿香气 (Aroma)', val: +document.getElementById('userScoreAroma').value, hint: '花香 / 果香 / 坚果可可 / 烘焙香' },
-        { name: '酸质质感 (Acidity)', val: +document.getElementById('userScoreAcid').value, hint: '明亮柑橘酸 / 柔和果酸 / 尖酸刺激 / 平淡' },
-        { name: '甜感表现 (Sweetness)', val: +document.getElementById('userScoreSweet').value, hint: '蜂蜜蔗糖 / 焦糖太妃 / 回甘明显 / 寡淡' },
-        { name: '苦感强度 (Bitterness)', val: +document.getElementById('userScoreBitter').value, hint: '愉悦黑巧苦 / 焦苦刺激 / 药草苦 / 几乎无苦' },
-        { name: '醇厚度/触感 (Body)', val: +document.getElementById('userScoreBody').value, hint: '奶油顺滑 / 糖浆饱满 / 果汁感 / 薄水感' },
-        { name: '余韵与干净度 (Finish)', val: +document.getElementById('userScoreFinish').value, hint: '悠长回甘 / 干净通透 / 尾段干涩锁喉' }
-      ];
+            const ctx = canvas.getContext('2d');
+            // 将坐标系直接缩放映射为物理毫米 (1个坐标单位 = 1.0 mm)
+            const scaleMmToDevicePx = (canvas.width / physicalWidthMm);
+            ctx.setTransform(scaleMmToDevicePx, 0, 0, scaleMmToDevicePx, 0, 0);
 
-      document.getElementById('prSensoryFormBody').innerHTML = sensoryRows.map(row => {
-        const boxes = [1, 2, 3, 4, 5].map(n => {
-          const checked = useOnlineScores && Math.round(row.val) === n;
-          return `<span class="mr-2 font-mono">${checked ? '☑' : '☐'} ${n}分</span>`;
-        }).join('');
-        const scoreSuffix = useOnlineScores ? `<span class="font-mono font-bold ml-1">(记录: ${row.val}分)</span>` : '';
-        return `
-          <tr>
-            <td class="font-semibold bg-slate-50">${row.name}</td>
-            <td>${boxes}${scoreSuffix}</td>
-            <td class="text-slate-600">${row.hint}</td>
-          </tr>
-        `;
-      }).join('');
+            // 背景纯白
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, physicalWidthMm, physicalHeightMm);
 
-      document.getElementById('prFlavorCheckboxes').innerHTML = FLAVOR_WHEEL_TAGS.map(tag => {
-        const checked = state.selectedTags.has(tag);
-        return `<span>${checked ? '☑' : '☐'} ${tag}</span>`;
-      }).join('');
+            const curUm = state.grind;
+            const optUm = state.sim.bean.optimal.grind;
+            const curMm = curUm / 1000;
+            const optMm = optUm / 1000;
 
-      document.getElementById('prNotesEvolution').textContent = document.getElementById('inputTempEvolution').value;
-      document.getElementById('prNotesNextPlan').textContent = document.getElementById('inputNextPlan').value;
-    }
+            // 模拟磨豆机研磨出的主粒径正态分布比例 (0.82x ~ 1.18x d50)，共16粒
+            const multipliers = [
+                0.82, 0.96, 1.05, 0.88, 1.14, 0.92, 1.02, 1.18,
+                1.08, 0.85, 1.12, 0.98, 0.90, 1.16, 0.95, 1.04
+            ];
 
-    function updateAll() {
-      const sim = runSimulation();
+            function drawCluster(boxX, boxY, boxW, boxH, title, subTitle, baseMm, titleColor, borderColor, particleColor) {
+                ctx.strokeStyle = borderColor;
+                ctx.lineWidth = 0.22;
+                ctx.strokeRect(boxX, boxY, boxW, boxH);
 
-      document.getElementById('beanMetaBadge').textContent =
-        `${sim.bean.name} · ${sim.bean.origin} · ${sim.bean.process} · 推荐研磨 ${sim.bean.sweetSpot.grind}μm / ${sim.bean.sweetSpot.temp}°C`;
+                ctx.fillStyle = titleColor;
+                ctx.font = 'bold 1.75px "Inter", sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(title, boxX + 1.0, boxY + 2.2);
 
-      document.getElementById('grindVal').textContent = `${state.grind} μm`;
-      document.getElementById('grindLabel').textContent = `(${getGrindDesc(state.grind).split(' ')[0]})`;
-      document.getElementById('finesRatioText').textContent = `极细粉(<100μm): ${sim.finesPct}%`;
-      document.getElementById('barFines').style.width = `${sim.finesPct}%`;
-      document.getElementById('barTarget').style.width = `${sim.targetPct}%`;
-      document.getElementById('barBoulders').style.width = `${sim.bouldersPct}%`;
+                ctx.fillStyle = '#475569';
+                ctx.font = '1.45px "JetBrains Mono", monospace';
+                ctx.fillText(subTitle, boxX + 1.0, boxY + 4.1);
 
-      document.getElementById('tempVal').textContent = `${state.temp} °C`;
-      document.getElementById('tempKineticLabel').textContent =
-        state.temp >= 93 ? '(高热能·快速溶出)' : state.temp <= 88 ? '(温和慢萃·低苦涩)' : '(标准均衡扩散)';
+                // 绘制 2行 x 8列 = 16 粒具有真实刀盘切割棱角感的多边形颗粒
+                for (let i = 0; i < 16; i++) {
+                    const col = i % 8;
+                    const row = Math.floor(i / 8);
+                    const jitterX = ((i * 37) % 10 - 5) * 0.035;
+                    const jitterY = ((i * 53) % 10 - 5) * 0.035;
+                    const cx = boxX + 2.4 + col * 2.45 + jitterX;
+                    const cy = boxY + 7.6 + row * 3.6 + jitterY;
 
-      document.getElementById('doseVal').textContent = `${state.dose.toFixed(1)} g`;
-      document.getElementById('ratioVal').textContent = `1 : ${state.ratio.toFixed(1)}`;
-      document.getElementById('waterSummary').textContent =
-        `${sim.totalWater} ml 注水 → 约 ${sim.beverageWeight} g 咖啡液`;
+                    const diaMm = baseMm * multipliers[i];
+                    const r = diaMm / 2;
 
-      document.querySelectorAll('.pour-btn').forEach(btn => {
-        const active = btn.dataset.pour === state.pour;
-        btn.className = `pour-btn px-2.5 py-2 rounded-lg border text-left transition ${
-          active ? 'bg-amber-500/20 border-amber-400 text-amber-200' : 'bg-espresso-900 border-stone-800 text-stone-300 hover:border-stone-600'
-        }`;
-      });
-      document.querySelectorAll('.dripper-btn').forEach(btn => {
-        const active = btn.dataset.dripper === state.dripper;
-        btn.className = `dripper-btn px-2.5 py-2 rounded-lg border text-left transition ${
-          active ? 'bg-amber-500/20 border-amber-400 text-amber-200' : 'bg-espresso-900 border-stone-800 text-stone-300 hover:border-stone-600'
-        }`;
-      });
+                    ctx.beginPath();
+                    const vertices = 7;
+                    for (let v = 0; v < vertices; v++) {
+                        const angle = (v / vertices) * Math.PI * 2 + i * 0.65;
+                        const stretch = (v % 2 === 0) ? 1.14 : 0.86;
+                        const px = cx + Math.cos(angle) * r * stretch;
+                        const py = cy + Math.sin(angle) * r * (2 - stretch);
+                        if (v === 0) ctx.moveTo(px, py);
+                        else ctx.lineTo(px, py);
+                    }
+                    ctx.closePath();
+                    ctx.fillStyle = particleColor;
+                    ctx.fill();
+                }
+            }
 
-      document.getElementById('kpiEY').textContent = `${sim.ey}%`;
-      const eyStatusEl = document.getElementById('kpiEYStatus');
-      const goldBadgeEl = document.getElementById('goldCupBadge');
-      if (sim.ey < 18.0) {
-        eyStatusEl.textContent = '⚠ 萃取不足 (Under-extracted · 偏酸涩/水感)';
-        eyStatusEl.className = 'mt-1 text-[11px] font-medium text-amber-400';
-        goldBadgeEl.textContent = '欠萃偏酸区';
-        goldBadgeEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30';
-      } else if (sim.ey > 22.0) {
-        eyStatusEl.textContent = '⚠ 过度萃取 (Over-extracted · 尾段苦涩杂味)';
-        eyStatusEl.className = 'mt-1 text-[11px] font-medium text-rose-400';
-        goldBadgeEl.textContent = '过萃苦涩区';
-        goldBadgeEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30';
-      } else {
-        eyStatusEl.textContent = '✓ 处于 SCA 黄金萃取区间 (18~22%)';
-        eyStatusEl.className = 'mt-1 text-[11px] font-medium text-emerald-400';
-        goldBadgeEl.textContent = 'SCA 金杯理想区';
-        goldBadgeEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
-      }
+            // 左框：当前设定粒径 (16粒)
+            drawCluster(
+                0.8, 0.8, 22.0, 15.8,
+                `当前设定: ${curUm}μm (${curMm.toFixed(2)}mm)`,
+                `主分布:${Math.round(curUm * 0.82)}~${Math.round(curUm * 1.18)}μm (16粒)`,
+                curMm, '#0f172a', '#64748b', '#1c1917'
+            );
 
-      document.getElementById('kpiTDS').textContent = `${sim.tds}%`;
-      const tdsStatusEl = document.getElementById('kpiTDSStatus');
-      if (sim.tds < 1.15) tdsStatusEl.textContent = '口感偏清淡 · 茶感明显 (Light Body)';
-      else if (sim.tds > 1.45) tdsStatusEl.textContent = '口感浓郁厚重 · 糖浆质感 (Heavy Body)';
-      else tdsStatusEl.textContent = '✓ 醇厚度适中 · 层次清晰 (Balanced)';
+            // 中框：豆款推荐金杯粒径 (16粒)
+            drawCluster(
+                23.8, 0.8, 22.0, 15.8,
+                `推荐粒径: ${optUm}μm (${optMm.toFixed(2)}mm)`,
+                `金杯主粒径参考群 (16粒)`,
+                optMm, '#065f46', '#059669', '#292524'
+            );
 
-      document.getElementById('kpiTime').textContent = formatTime(sim.totalTimeSec);
-      document.getElementById('kpiFlowPeak').textContent = `峰值 ${sim.peakFlow} ml/s`;
-      const clogEl = document.getElementById('kpiClogStatus');
-      const clogBadge = document.getElementById('clogRiskBadge');
-      if (sim.clogIndex > 1.35) {
-        clogEl.textContent = '⚠ 细粉迁移积水 · 尾部严重堵水 (Stalling)';
-        clogEl.className = 'mt-1 text-[11px] font-medium text-rose-400';
-        clogBadge.textContent = `堵水风险: 高 (${sim.clogIndex})`;
-        clogBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30';
-      } else if (sim.clogIndex > 1.12) {
-        clogEl.textContent = '后段流速放缓 · 轻微细粉截留';
-        clogEl.className = 'mt-1 text-[11px] font-medium text-amber-300';
-        clogBadge.textContent = `堵水风险: 中 (${sim.clogIndex})`;
-        clogBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300';
-      } else {
-        clogEl.textContent = '✓ 粉床渗流顺畅 · 无细粉淤积';
-        clogEl.className = 'mt-1 text-[11px] font-medium text-emerald-400';
-        clogBadge.textContent = `堵水风险: 低 (${sim.clogIndex})`;
-        clogBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-stone-800 text-emerald-300';
-      }
+            // 右框：实物咖啡粉撒放比对区 + 0.5/0.7/1.0mm 绝对基准圆点
+            const dropX = 46.8, dropY = 0.8, dropW = 24.4, dropH = 15.8;
+            ctx.save();
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 0.22;
+            ctx.setLineDash([0.8, 0.6]);
+            ctx.strokeRect(dropX, dropY, dropW, dropH);
+            ctx.restore();
 
-      document.getElementById('kpiBalance').textContent = sim.balanceRatio;
-      const flavorSumEl = document.getElementById('kpiFlavorSummary');
-      if (sim.balanceRatio < 0.72) flavorSumEl.textContent = '明亮果酸主导 · 清扬活泼';
-      else if (sim.balanceRatio > 1.18) flavorSumEl.textContent = '浓郁黑巧苦韵 · 醇厚深沉';
-      else flavorSumEl.textContent = '酸甜苦柔顺平衡 · 甜感饱满';
+            ctx.fillStyle = '#334155';
+            ctx.font = 'bold 1.7px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('[ 实物咖啡粉撒放比对区 ]', dropX + dropW / 2, dropY + 2.4);
 
-      document.getElementById('barAcidText').textContent = `${sim.acidExtract}% 溶出`;
-      document.getElementById('barAcidFill').style.width = `${sim.acidExtract}%`;
-      document.getElementById('barSweetText').textContent = `${sim.sweetExtract}% 溶出`;
-      document.getElementById('barSweetFill').style.width = `${sim.sweetExtract}%`;
-      document.getElementById('barBitterText').textContent = `${sim.bitterExtract}% 溶出`;
-      document.getElementById('barBitterFill').style.width = `${sim.bitterExtract}%`;
+            ctx.fillStyle = '#64748b';
+            ctx.font = '1.4px "Inter", sans-serif';
+            ctx.fillText('捻10~20粒真粉撒在此框对比', dropX + dropW / 2, dropY + 4.4);
 
-      const impacts = generateParameterImpacts(sim);
-      document.getElementById('liveDiagnosisText').innerHTML = impacts.map(i =>
-        `<div><strong class="text-amber-200">[${i.dim}]</strong> ${i.desc}</div>`
-      ).join('');
+            // 三个绝对直径基准点: 0.5mm, 0.7mm, 1.0mm
+            const refDots = [
+                { d: 0.5, x: dropX + 5.0, label: '0.5mm' },
+                { d: 0.7, x: dropX + 12.2, label: '0.7mm' },
+                { d: 1.0, x: dropX + 19.4, label: '1.0mm' }
+            ];
+            refDots.forEach(dot => {
+                ctx.beginPath();
+                ctx.arc(dot.x, dropY + 10.2, dot.d / 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#0f172a';
+                ctx.fill();
+                ctx.fillStyle = '#475569';
+                ctx.font = '1.35px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(dot.label, dot.x, dropY + 14.2);
+            });
 
-      goldCupChart.data.datasets[0].data = [{ x: sim.ey, y: sim.tds }];
-      goldCupChart.data.datasets[1].data = [{ x: sim.bean.sweetSpot.ey, y: sim.bean.sweetSpot.tds }];
-      goldCupChart.update('none');
+            // 底部 0 ~ 70 mm 物理毫米直尺刻度
+            const rulerY = 23.2;
+            ctx.strokeStyle = '#0f172a';
+            ctx.lineWidth = 0.25;
+            ctx.beginPath();
+            ctx.moveTo(1.0, rulerY);
+            ctx.lineTo(71.0, rulerY);
+            ctx.stroke();
 
-      flowChart.data.labels = sim.timeLabels;
-      flowChart.data.datasets[0].data = sim.flowRates;
-      flowChart.data.datasets[1].data = sim.cumulativeMass;
-      flowChart.options.scales.y1.max = Math.ceil(sim.beverageWeight * 1.15 / 50) * 50;
-      flowChart.update('none');
+            for (let m = 0; m <= 70; m++) {
+                const x = 1.0 + m;
+                const isTen = (m % 10 === 0);
+                const isFive = (m % 5 === 0 && !isTen);
+                const tickH = isTen ? 2.4 : (isFive ? 1.6 : 0.9);
+                ctx.lineWidth = isTen ? 0.24 : 0.14;
+                ctx.beginPath();
+                ctx.moveTo(x, rulerY - tickH);
+                ctx.lineTo(x, rulerY);
+                ctx.stroke();
 
-      radarChart.data.datasets[0].data = sim.radarScores;
-      radarChart.data.datasets[1].data = sim.bean.idealRadar;
-      radarChart.update('none');
+                if (isTen && m <= 60) {
+                    ctx.fillStyle = '#0f172a';
+                    ctx.font = '1.75px "JetBrains Mono", monospace';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`${m}mm`, x + 0.35, rulerY - 2.6);
+                }
+            }
+        }
 
-      syncPrintSheet(sim);
-    }
+        /**
+         * 4B. 网页端抗浏览器缩放补偿 (无论用户按 Ctrl+ 还是 Ctrl-，物理尺寸始终锁定)
+         */
+        function applyWebPhysicalZoomLock() {
+            const currentDpr = window.devicePixelRatio || 1;
+            const visualScale = window.visualViewport ? window.visualViewport.scale : 1;
+            const browserZoomRatio = (currentDpr / state.baseDpr) * visualScale;
+            const inverseScale = (1 / browserZoomRatio) * state.screenCalib;
 
-    window.addEventListener('DOMContentLoaded', () => {
-      renderBeanSelector();
-      renderFlavorTags();
-      initCharts();
+            const wrapper = document.getElementById('physical-canvas-wrapper');
+            if (wrapper) {
+                wrapper.style.transform = `scale(${inverseScale.toFixed(4)})`;
+                const baseH = 92;
+                wrapper.style.marginBottom = `${Math.round(baseH * (inverseScale - 1))}px`;
+            }
 
-      const bindSlider = (id, key) => {
-        document.getElementById(id).addEventListener('input', e => {
-          state[key] = parseFloat(e.target.value);
-          updateAll();
-        });
-      };
-      bindSlider('grindSlider', 'grind');
-      bindSlider('tempSlider', 'temp');
-      bindSlider('doseSlider', 'dose');
-      bindSlider('ratioSlider', 'ratio');
+            const lockLabel = document.getElementById('label-zoom-lock');
+            if (lockLabel) {
+                const zoomPct = Math.round(browserZoomRatio * 100);
+                lockLabel.textContent = zoomPct === 100
+                    ? `✓ 已锁定物理毫米尺寸 (校准:${state.screenCalib.toFixed(2)}x)`
+                    : `✓ 已抵消网页缩放(${zoomPct}%) · 尺寸恒定`;
+            }
+        }
 
-      document.querySelectorAll('.pour-btn').forEach(btn => {
-        btn.addEventListener('click', () => { state.pour = btn.dataset.pour; updateAll(); });
-      });
-      document.querySelectorAll('.dripper-btn').forEach(btn => {
-        btn.addEventListener('click', () => { state.dripper = btn.dataset.dripper; updateAll(); });
-      });
+        /**
+         * 5. Canvas 高清自适应工具函数与三大动力学图表绘制
+         */
+        function setupHiDPICanvas(canvas) {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            const width = rect.width || canvas.width || 320;
+            const height = rect.height || canvas.height || 240;
+            if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+                canvas.width = Math.round(width * dpr);
+                canvas.height = Math.round(height * dpr);
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { ctx, width, height };
+        }
 
-      document.getElementById('btnSweetSpot').addEventListener('click', () => {
-        const sp = BEAN_MODELS[state.beanId].sweetSpot;
-        state.grind = sp.grind; state.temp = sp.temp; state.dose = sp.dose; state.ratio = sp.ratio;
-        state.pour = sp.pour; state.dripper = sp.dripper;
-        document.getElementById('grindSlider').value = state.grind;
-        document.getElementById('tempSlider').value = state.temp;
-        document.getElementById('doseSlider').value = state.dose;
-        document.getElementById('ratioSlider').value = state.ratio;
-        updateAll();
-      });
+        function drawGoldCupChart() {
+            const canvas = document.getElementById('canvas-goldcup');
+            if (!canvas) return;
+            const { ctx, width, height } = setupHiDPICanvas(canvas);
+            const sim = state.sim;
 
-      document.getElementById('btnReset').addEventListener('click', () => {
-        state.grind = 620; state.temp = 92; state.dose = 15.0; state.ratio = 15.0;
-        state.pour = 'three'; state.dripper = 'v60';
-        document.getElementById('grindSlider').value = 620;
-        document.getElementById('tempSlider').value = 92;
-        document.getElementById('doseSlider').value = 15;
-        document.getElementById('ratioSlider').value = 15;
-        updateAll();
-      });
+            const pad = { top: 24, right: 24, bottom: 38, left: 48 };
+            const plotW = width - pad.left - pad.right;
+            const plotH = height - pad.top - pad.bottom;
 
-      [
-        ['userScoreAroma', 'userScoreAromaVal'],
-        ['userScoreAcid', 'userScoreAcidVal'],
-        ['userScoreSweet', 'userScoreSweetVal'],
-        ['userScoreBitter', 'userScoreBitterVal'],
-        ['userScoreBody', 'userScoreBodyVal'],
-        ['userScoreFinish', 'userScoreFinishVal']
-      ].forEach(([sliderId, labelId]) => {
-        document.getElementById(sliderId).addEventListener('input', e => {
-          document.getElementById(labelId).textContent = `${parseFloat(e.target.value).toFixed(1)} / 5`;
-          syncPrintSheet(runSimulation());
-        });
-      });
+            const minEY = 14, maxEY = 26;
+            const minTDS = 0.8, maxTDS = 1.8;
+            const xMap = (ey) => pad.left + ((ey - minEY) / (maxEY - minEY)) * plotW;
+            const yMap = (tds) => pad.top + plotH - ((tds - minTDS) / (maxTDS - minTDS)) * plotH;
 
-      ['inputBarista', 'inputRoastDate', 'inputActualYield', 'inputActualTDS', 'inputTempEvolution', 'inputNextPlan', 'chkUseOnlineScores'].forEach(id => {
-        document.getElementById(id).addEventListener('input', () => syncPrintSheet(runSimulation()));
-      });
+            ctx.clearRect(0, 0, width, height);
 
-      const triggerPrint = () => { syncPrintSheet(runSimulation()); window.print(); };
-      document.getElementById('btnPrintTop').addEventListener('click', triggerPrint);
-      document.getElementById('btnPrintBottom').addEventListener('click', triggerPrint);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.lineWidth = 1;
+            ctx.font = '10px "JetBrains Mono", monospace';
+            ctx.fillStyle = '#78716c';
 
-      updateAll();
-    });
-  </script>
+            for (let ey = 14; ey <= 26; ey += 2) {
+                const x = xMap(ey);
+                ctx.beginPath();
+                ctx.moveTo(x, pad.top);
+                ctx.lineTo(x, pad.top + plotH);
+                ctx.stroke();
+                ctx.textAlign = 'center';
+                ctx.fillText(ey + '%', x, height - 14);
+            }
+
+            for (let tds = 0.8; tds <= 1.81; tds += 0.2) {
+                const y = yMap(tds);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(pad.left + plotW, y);
+                ctx.stroke();
+                ctx.textAlign = 'right';
+                ctx.fillText(tds.toFixed(1) + '%', pad.left - 6, y + 3);
+            }
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(pad.left, pad.top, plotW, plotH);
+            ctx.clip();
+
+            const ratioLines = [12, 15, 18];
+            ratioLines.forEach(r => {
+                ctx.beginPath();
+                const ey1 = 14, ey2 = 26;
+                const tds1 = ey1 / (r - 1.15);
+                const tds2 = ey2 / (r - 1.15);
+                ctx.moveTo(xMap(ey1), yMap(tds1));
+                ctx.lineTo(xMap(ey2), yMap(tds2));
+                ctx.strokeStyle = r === 15 ? 'rgba(245, 158, 11, 0.28)' : 'rgba(255, 255, 255, 0.09)';
+                ctx.setLineDash([4, 4]);
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                const labelEY = r === 12 ? 17.5 : (r === 15 ? 21.2 : 24.2);
+                const labelTDS = labelEY / (r - 1.15);
+                ctx.fillStyle = 'rgba(231, 229, 228, 0.35)';
+                ctx.textAlign = 'left';
+                ctx.fillText(`1:${r}`, xMap(labelEY) + 4, yMap(labelTDS) - 4);
+            });
+            ctx.setLineDash([]);
+
+            ctx.font = '11px "Inter", sans-serif';
+            ctx.fillStyle = 'rgba(125, 211, 252, 0.28)';
+            ctx.textAlign = 'left';
+            ctx.fillText('萃取不足 / 尖酸浓烈', xMap(14.4), yMap(1.68));
+            ctx.fillText('不足 / 寡淡酸水感', xMap(14.4), yMap(0.92));
+
+            ctx.fillStyle = 'rgba(248, 113, 113, 0.28)';
+            ctx.textAlign = 'right';
+            ctx.fillText('过萃 / 苦涩浓重', xMap(25.6), yMap(1.68));
+            ctx.fillText('过萃 / 偏淡空洞干涩', xMap(25.6), yMap(0.92));
+
+            const gx1 = xMap(18), gx2 = xMap(22);
+            const gy1 = yMap(1.45), gy2 = yMap(1.15);
+            const gradGold = ctx.createLinearGradient(gx1, gy1, gx2, gy2);
+            gradGold.addColorStop(0, 'rgba(245, 158, 11, 0.24)');
+            gradGold.addColorStop(1, 'rgba(16, 185, 129, 0.16)');
+            ctx.fillStyle = gradGold;
+            ctx.fillRect(gx1, gy1, gx2 - gx1, gy2 - gy1);
+
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.75)';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(gx1, gy1, gx2 - gx1, gy2 - gy1);
+
+            ctx.fillStyle = '#fde68a';
+            ctx.font = '600 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('SCA GOLD CUP ZONE', (gx1 + gx2) / 2, gy1 + 13);
+
+            const idealX = xMap(sim.idealEyCenter);
+            const idealY = yMap(sim.idealEyCenter / (sim.bean.optimal.ratio - 1.15));
+            ctx.beginPath();
+            ctx.arc(idealX, idealY, 9, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(52, 211, 153, 0.65)';
+            ctx.setLineDash([2, 2]);
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            const curX = xMap(sim.ey);
+            const curY = yMap(sim.tds);
+
+            ctx.beginPath();
+            ctx.moveTo(curX, pad.top);
+            ctx.lineTo(curX, pad.top + plotH);
+            ctx.moveTo(pad.left, curY);
+            ctx.lineTo(pad.left + plotW, curY);
+            ctx.strokeStyle = 'rgba(251, 191, 36, 0.25)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            const outerGlow = ctx.createRadialGradient(curX, curY, 2, curX, curY, 20);
+            outerGlow.addColorStop(0, 'rgba(251, 191, 36, 0.85)');
+            outerGlow.addColorStop(0.5, 'rgba(245, 158, 11, 0.3)');
+            outerGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+            ctx.fillStyle = outerGlow;
+            ctx.beginPath();
+            ctx.arc(curX, curY, 20, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(curX, curY, 5.5, 0, Math.PI * 2);
+            ctx.fillStyle = '#fef3c7';
+            ctx.fill();
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const labelBoxX = curX > width - 110 ? curX - 88 : curX + 10;
+            const labelBoxY = curY < 50 ? curY + 10 : curY - 28;
+            ctx.fillStyle = 'rgba(24, 22, 20, 0.92)';
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.fillRect(labelBoxX, labelBoxY, 78, 22);
+            ctx.strokeRect(labelBoxX, labelBoxY, 78, 22);
+
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = '600 10px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${sim.ey.toFixed(1)}% | ${sim.tds.toFixed(2)}%`, labelBoxX + 39, labelBoxY + 14);
+
+            ctx.restore();
+
+            ctx.fillStyle = '#a8a29e';
+            ctx.font = '10px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('萃取率 Extraction Yield (EY%) →', pad.left + plotW / 2, height - 2);
+        }
+
+        function drawKineticsChart() {
+            const canvas = document.getElementById('canvas-kinetics');
+            if (!canvas) return;
+            const { ctx, width, height } = setupHiDPICanvas(canvas);
+            const sim = state.sim;
+            const series = sim.kineticsSeries;
+
+            const pad = { top: 22, right: 42, bottom: 36, left: 42 };
+            const plotW = width - pad.left - pad.right;
+            const plotH = height - pad.top - pad.bottom;
+
+            const maxT = sim.maxPlotTime;
+            const maxFlow = 4.5;
+            const maxMass = Math.max(250, Math.ceil(sim.beverageWeight / 50) * 50);
+
+            const xMap = (t) => pad.left + (t / maxT) * plotW;
+            const yFlowMap = (f) => pad.top + plotH - (Math.min(maxFlow, f) / maxFlow) * plotH;
+            const yMassMap = (m) => pad.top + plotH - (Math.min(maxMass, m) / maxMass) * plotH;
+
+            ctx.clearRect(0, 0, width, height);
+
+            let t40 = 60, t75 = 110;
+            for (const pt of series) {
+                if (pt.massRatio <= 0.40) t40 = pt.t;
+                if (pt.massRatio <= 0.75) t75 = pt.t;
+            }
+            const tEnd = sim.totalTime;
+
+            const x0 = xMap(0);
+            const x40 = xMap(t40);
+            const x75 = xMap(t75);
+            const xEnd = xMap(tEnd);
+
+            ctx.fillStyle = 'rgba(251, 191, 36, 0.09)';
+            ctx.fillRect(x0, pad.top, Math.max(0, x40 - x0), plotH);
+            ctx.fillStyle = 'rgba(249, 115, 22, 0.10)';
+            ctx.fillRect(x40, pad.top, Math.max(0, x75 - x40), plotH);
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.09)';
+            ctx.fillRect(x75, pad.top, Math.max(0, xEnd - x75), plotH);
+
+            ctx.font = '10px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            if (x40 - x0 > 38) {
+                ctx.fillStyle = 'rgba(251, 191, 36, 0.75)';
+                ctx.fillText('前段酸香', (x0 + x40) / 2, pad.top + 12);
+            }
+            if (x75 - x40 > 38) {
+                ctx.fillStyle = 'rgba(251, 146, 60, 0.8)';
+                ctx.fillText('中段甜感', (x40 + x75) / 2, pad.top + 12);
+            }
+            if (xEnd - x75 > 34) {
+                ctx.fillStyle = 'rgba(192, 132, 252, 0.8)';
+                ctx.fillText('尾段苦涩', (x75 + xEnd) / 2, pad.top + 12);
+            }
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.lineWidth = 1;
+            ctx.font = '10px "JetBrains Mono", monospace';
+
+            for (let t = 0; t <= maxT; t += 30) {
+                const x = xMap(t);
+                ctx.beginPath();
+                ctx.moveTo(x, pad.top);
+                ctx.lineTo(x, pad.top + plotH);
+                ctx.stroke();
+                ctx.fillStyle = '#78716c';
+                ctx.textAlign = 'center';
+                ctx.fillText(t + 's', x, height - 14);
+            }
+
+            for (let f = 0; f <= 4.0; f += 1.0) {
+                const y = yFlowMap(f);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, y);
+                ctx.lineTo(pad.left + plotW, y);
+                ctx.stroke();
+                ctx.fillStyle = '#f59e0b';
+                ctx.textAlign = 'right';
+                ctx.fillText(f.toFixed(1), pad.left - 6, y + 3);
+            }
+
+            for (let m = 0; m <= maxMass; m += Math.round(maxMass / 4)) {
+                const y = yMassMap(m);
+                ctx.fillStyle = '#38bdf8';
+                ctx.textAlign = 'left';
+                ctx.fillText(m + 'g', pad.left + plotW + 5, y + 3);
+            }
+
+            ctx.beginPath();
+            series.forEach((pt, idx) => {
+                const x = xMap(pt.t);
+                const y = yMassMap(pt.mass);
+                if (idx === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.beginPath();
+            series.forEach((pt, idx) => {
+                const x = xMap(pt.t);
+                const y = yFlowMap(pt.flow);
+                if (idx === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.lineTo(xMap(series[series.length - 1].t), pad.top + plotH);
+            ctx.lineTo(pad.left, pad.top + plotH);
+            ctx.closePath();
+
+            const flowGrad = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotH);
+            flowGrad.addColorStop(0, 'rgba(245, 158, 11, 0.35)');
+            flowGrad.addColorStop(1, 'rgba(245, 158, 11, 0.02)');
+            ctx.fillStyle = flowGrad;
+            ctx.fill();
+
+            ctx.beginPath();
+            series.forEach((pt, idx) => {
+                const x = xMap(pt.t);
+                const y = yFlowMap(pt.flow);
+                if (idx === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2.2;
+            ctx.stroke();
+
+            if (sim.isStalling) {
+                const stallT = Math.round(sim.totalTime * 0.72);
+                const stallX = xMap(stallT);
+                const stallY = yFlowMap(0.65);
+
+                ctx.beginPath();
+                ctx.arc(stallX, stallY, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ef4444';
+                ctx.fill();
+
+                ctx.fillStyle = '#fca5a5';
+                ctx.font = '600 10px "Inter", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('⚠ 细粉迁移堵水 (Stalling)', stallX, stallY - 10);
+            }
+
+            ctx.fillStyle = '#a8a29e';
+            ctx.font = '10px "Inter", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('冲煮时间 Brew Time (s) →', pad.left + plotW / 2, height - 2);
+        }
+
+        function drawSensoryRadar() {
+            const canvas = document.getElementById('canvas-radar');
+            if (!canvas) return;
+            const { ctx, width, height } = setupHiDPICanvas(canvas);
+            const scores = state.sim.radarScores;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const cx = width / 2;
+            const cy = height / 2 + 2;
+            const maxR = Math.min(width, height) * 0.35;
+
+            const axes = [
+                { key: 'aroma', label: '香气' },
+                { key: 'acidity', label: '酸质' },
+                { key: 'sweetness', label: '甜度' },
+                { key: 'body', label: '醇厚度' },
+                { key: 'aftertaste', label: '余韵' },
+                { key: 'cleanliness', label: '干净度' }
+            ];
+
+            [0.25, 0.5, 0.75, 1.0].forEach(lvl => {
+                ctx.beginPath();
+                axes.forEach((_, i) => {
+                    const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+                    const x = cx + Math.cos(angle) * maxR * lvl;
+                    const y = cy + Math.sin(angle) * maxR * lvl;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.closePath();
+                ctx.strokeStyle = lvl === 1.0 ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.07)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            axes.forEach((axis, i) => {
+                const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+                const x = cx + Math.cos(angle) * maxR;
+                const y = cy + Math.sin(angle) * maxR;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+                ctx.stroke();
+
+                const lx = cx + Math.cos(angle) * (maxR + 18);
+                const ly = cy + Math.sin(angle) * (maxR + 14);
+                ctx.fillStyle = '#d6d3d1';
+                ctx.font = '11px "Inter", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(axis.label, lx, ly);
+            });
+
+            ctx.beginPath();
+            axes.forEach((axis, i) => {
+                const val = scores[axis.key];
+                const norm = Math.max(0.15, (val - 4.0) / 6.0);
+                const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+                const x = cx + Math.cos(angle) * maxR * norm;
+                const y = cy + Math.sin(angle) * maxR * norm;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.28)';
+            ctx.fill();
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            axes.forEach((axis, i) => {
+                const val = scores[axis.key];
+                const norm = Math.max(0.15, (val - 4.0) / 6.0);
+                const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
+                const x = cx + Math.cos(angle) * maxR * norm;
+                const y = cy + Math.sin(angle) * maxR * norm;
+
+                ctx.beginPath();
+                ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#fef3c7';
+                ctx.fill();
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            });
+        }
+
+        let animPhase = 0;
+        function drawDripperSimulation() {
+            const canvas = document.getElementById('canvas-dripper-sim');
+            if (!canvas || !state.sim) return;
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            const sim = state.sim;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const topW = 126;
+            const botW = state.dripper === 'kalita' ? 68 : (state.dripper === 'v60' ? 26 : 38);
+            const topY = 22;
+            const botY = 108;
+            const cx = w / 2;
+
+            const waterLevelRatio = Math.min(0.92, 0.45 + sim.darcyIndex * 0.045);
+            const waterY = botY - (botY - topY) * waterLevelRatio;
+            const waterHalfW = (botW / 2) + ((topW - botW) / 2) * waterLevelRatio;
+
+            ctx.beginPath();
+            ctx.moveTo(cx - waterHalfW, waterY);
+            ctx.lineTo(cx + waterHalfW, waterY);
+            ctx.lineTo(cx + botW / 2, botY);
+            ctx.lineTo(cx - botW / 2, botY);
+            ctx.closePath();
+            const liquidGrad = ctx.createLinearGradient(0, waterY, 0, botY);
+            liquidGrad.addColorStop(0, 'rgba(245, 158, 11, 0.25)');
+            liquidGrad.addColorStop(1, 'rgba(120, 53, 15, 0.75)');
+            ctx.fillStyle = liquidGrad;
+            ctx.fill();
+
+            const bedRatio = 0.42;
+            const bedY = botY - (botY - topY) * bedRatio;
+            const bedHalfW = (botW / 2) + ((topW - botW) / 2) * bedRatio;
+
+            ctx.beginPath();
+            ctx.moveTo(cx - bedHalfW, bedY);
+            ctx.lineTo(cx + bedHalfW, bedY);
+            ctx.lineTo(cx + botW / 2, botY);
+            ctx.lineTo(cx - botW / 2, botY);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(68, 32, 12, 0.88)';
+            ctx.fill();
+
+            if (sim.clogIndex > 1.2) {
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.38)';
+                ctx.fillRect(cx - botW / 2 + 2, botY - 6, botW - 4, 6);
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(cx - topW / 2, topY);
+            ctx.lineTo(cx - botW / 2, botY);
+            ctx.lineTo(cx + botW / 2, botY);
+            ctx.lineTo(cx + topW / 2, topY);
+            ctx.strokeStyle = '#d6d3d1';
+            ctx.lineWidth = 2.2;
+            ctx.stroke();
+
+            animPhase = (animPhase + 0.08 * sim.avgFlowRate) % (Math.PI * 2);
+
+            ctx.beginPath();
+            const streamOffset = state.agitation === 'single' ? 0 : Math.sin(animPhase) * 14;
+            ctx.moveTo(cx + streamOffset, 2);
+            ctx.lineTo(cx + streamOffset * 0.6, waterY);
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+            ctx.lineWidth = state.agitation === 'single' ? 3.2 : (state.agitation === 'gentle' ? 1.4 : 2.2);
+            ctx.stroke();
+
+            const dropY = botY + 6 + ((animPhase * 6) % 28);
+            ctx.beginPath();
+            ctx.arc(cx, dropY, sim.isStalling ? 2.0 : 3.2, 0, Math.PI * 2);
+            ctx.fillStyle = '#d97706';
+            ctx.fill();
+        }
+
+        /**
+         * 6. 诊断报告与 A4 打印单参数影响机理说明生成器
+         */
+        function generateDiagnosticReport(sim) {
+            const messages = [];
+            const { ey, tds, isStalling, channelingRisk, bean } = sim;
+
+            if (ey >= 18.0 && ey <= 22.0 && tds >= 1.15 && tds <= 1.45 && !isStalling) {
+                messages.push(`当前工作点精准落入【SCA 金杯理想区间 (EY ${ey.toFixed(1)}%, TDS ${tds.toFixed(2)}%)】。`);
+            } else if (ey < 18.0) {
+                messages.push(`当前萃取率偏低 (${ey.toFixed(1)}% < 18%)，前段小分子果酸占主导，缺乏中段焦糖甜感支撑，风味偏尖酸寡淡。`);
+            } else if (ey > bean.bitterThreshold) {
+                messages.push(`当前萃取率 (${ey.toFixed(1)}%) 已超出【${bean.name.split(' ')[1]}】耐萃阈值 (${bean.bitterThreshold}%)，尾段木质单宁与苦味过量溶出。`);
+            }
+
+            if (isStalling) {
+                messages.push(`物理预警：研磨过细 (${state.grind}μm) 叠加细粉迁移 (${sim.finesPct.toFixed(1)}%) 堵塞滤纸底孔引发尾部堵水（Stalling）。建议调粗至 ${Math.min(850, state.grind + 120)}μm。`);
+            } else if (channelingRisk >= 32) {
+                messages.push(`通道效应提示：较细粉层配合强扰动注水产生局部水力击穿风险 (${channelingRisk}%)，易造成局部杂涩。`);
+            } else {
+                messages.push(`动力学分析：比表面积 (${sim.ssa} cm²/g) 与水温 (${state.temp.toFixed(1)}°C) 匹配良好，粉床渗透率 k=${sim.permeabilityK.toFixed(2)} D，酸甜苦平衡净度高。`);
+            }
+            return messages.join(' ');
+        }
+
+        function generateParameterImpactsForPrint(sim) {
+            const grindExp = state.grind < 540
+                ? `偏细粒径（${state.grind}μm）使比表面积增至 ${sim.ssa} cm²/g，极细粉达 ${sim.finesPct.toFixed(1)}%，加速前中段溶出，但达西渗流阻力 R=${sim.darcyIndex.toFixed(1)} 偏高，尾段易发生微孔截留并释出杂苦。`
+                : state.grind > 780
+                ? `偏粗粒径（${state.grind}μm）提升粉床渗透率（k=${sim.permeabilityK.toFixed(2)} D），下水流畅并有效截断尾段大分子木质苦涩，干净度高，但颗粒内扩散路径较长。`
+                : `标准手冲黄金粒径（${state.grind}μm），比表面积 ${sim.ssa} cm²/g 与极细粉占比（${sim.finesPct.toFixed(1)}%）处于平衡点，兼顾焦糖甜感溶出与顺畅下水。`;
+
+            const tempExp = state.temp >= 93
+                ? `高温（${state.temp.toFixed(1)}°C）提升阿伦尼乌斯热扩散速率（${sim.tempFactor.toFixed(2)}x），充分激发浅烘豆花果酸香，但对中深烘豆易加速绿原酸内酯苦味析出。`
+                : state.temp <= 88
+                ? `中低温（${state.temp.toFixed(1)}°C）降低热扩散常数（${sim.tempFactor.toFixed(2)}x），显著抑制后段多酚与焦苦味溶出，使巴西/曼特宁/厌氧豆口感更圆润顺滑。`
+                : `均衡水温（${state.temp.toFixed(1)}°C）让前段明亮果酸与中段梅拉德焦糖甜感协调释出，不易产生尖酸或焦苦。`;
+
+            const ratioExp = state.ratio <= 13.5
+                ? `低粉水比（1:${state.ratio.toFixed(1)}，注水${Math.round(sim.totalWater)}ml）提高液相浓度至 TDS ${sim.tds.toFixed(2)}%，醇厚度极佳，但受固液浓度梯度饱和限制，整体萃取率偏保守。`
+                : state.ratio >= 16.5
+                ? `高粉水比（1:${state.ratio.toFixed(1)}，注水${Math.round(sim.totalWater)}ml）以充沛溶剂拉高萃取率至 EY ${sim.ey.toFixed(2)}%，茶感通透清晰，但醇厚度（TDS ${sim.tds.toFixed(2)}%）偏轻。`
+                : `黄金粉水比（1:${state.ratio.toFixed(1)}，注水${Math.round(sim.totalWater)}ml）使浓度（TDS ${sim.tds.toFixed(2)}%）与萃取率（EY ${sim.ey.toFixed(2)}%）同步落入理想平衡带。`;
+
+            const techExp = `${sim.agi.label} + ${sim.drp.label}：预计总接触时间 ${Math.floor(sim.totalTime / 60)}分${sim.totalTime % 60}秒，平均流速 ${sim.avgFlowRate.toFixed(2)} ml/s，通道效应风险 ${sim.channelingRisk}%，塑造出【${document.getElementById('sensory-balance-tag').textContent}】杯测结构。`;
+
+            return [
+                { dim: '研磨粒径与极细粉', val: `${state.grind} μm (细粉${sim.finesPct.toFixed(1)}%)`, desc: grindExp },
+                { dim: '冲煮水温热力学', val: `${state.temp.toFixed(1)} °C (扩散${sim.tempFactor.toFixed(2)}x)`, desc: tempExp },
+                { dim: '粉水比与溶剂梯度', val: `15.0g / 1:${state.ratio.toFixed(1)}`, desc: ratioExp },
+                { dim: '注水扰动与滤杯几何', val: `${sim.agi.label} + ${sim.drp.label.split(' ')[0]}`, desc: techExp }
+            ];
+        }
+
+        function syncPrintReportSheet() {
+            const sim = state.sim;
+            if (!sim) return;
+
+            const now = new Date();
+            document.getElementById('pr-date').textContent = now.toISOString().slice(0, 10);
+
+            const barista = document.getElementById('input-barista').value.trim();
+            document.getElementById('pr-barista').textContent = barista || '____________';
+
+            const roast = document.getElementById('input-roast').value.trim();
+            document.getElementById('pr-roast').textContent = '烘焙批次/养豆期：' + (roast || '____________');
+
+            const actTime = document.getElementById('input-actual-time').value.trim();
+            const actTds = document.getElementById('input-actual-tds').value.trim();
+            document.getElementById('pr-actual-measurements').textContent =
+                `实测时间/液重：${actTime || '__________'} | 实测TDS/水质：${actTds || '__________'}`;
+
+            document.getElementById('pr-bean-name').textContent = sim.bean.name;
+            document.getElementById('pr-bean-process').textContent = sim.bean.process;
+            document.getElementById('pr-bean-phys').textContent = `${sim.bean.porosity} / ${sim.bean.finesFactor}x`;
+
+            document.getElementById('pr-grind').textContent = `${state.grind} μm (${document.getElementById('label-grind-desc').textContent})`;
+            document.getElementById('pr-ssa-fines').textContent = `${sim.ssa} cm²/g / ${sim.finesPct.toFixed(1)}%`;
+            document.getElementById('pr-temp').textContent = `${state.temp.toFixed(1)} °C`;
+            document.getElementById('pr-ratio').textContent = `15.0g / 1:${state.ratio.toFixed(1)}`;
+            document.getElementById('pr-water').textContent = `${Math.round(sim.totalWater)} ml / 约 ${Math.round(sim.beverageWeight)} g`;
+            document.getElementById('pr-technique').textContent = `${sim.agi.label} / ${sim.drp.label}`;
+
+            document.getElementById('pr-ey').textContent = `${sim.ey.toFixed(2)}%`;
+            document.getElementById('pr-tds').textContent = `${sim.tds.toFixed(2)}%`;
+            const mins = Math.floor(sim.totalTime / 60);
+            const secs = sim.totalTime % 60;
+            document.getElementById('pr-time').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            document.getElementById('pr-flow-darcy').textContent = `${sim.avgFlowRate.toFixed(2)} ml/s (R=${sim.darcyIndex.toFixed(1)})`;
+            document.getElementById('pr-risk').textContent = `${sim.isStalling ? '堵水预警' : '正常'} (α=${sim.clogIndex.toFixed(2)})`;
+            document.getElementById('pr-gold-status').textContent = document.getElementById('gold-cup-badge').textContent;
+
+            const fp = sim.flavorPct;
+            document.getElementById('pr-balance-row').textContent =
+                `明亮果酸: ${fp.acid}% | 焦糖甜感: ${fp.sweet}% | 单宁苦韵: ${fp.bitter}% | 杂涩感: ${fp.astringent}%`;
+
+            const rs = sim.radarScores;
+            document.getElementById('pr-radar-row').textContent =
+                `香气:${rs.aroma.toFixed(1)} | 酸质:${rs.acidity.toFixed(1)} | 甜度:${rs.sweetness.toFixed(1)} | 醇厚:${rs.body.toFixed(1)} | 余韵:${rs.aftertaste.toFixed(1)} | 净度:${rs.cleanliness.toFixed(1)}`;
+
+            // 渲染打印专用的高清 1:1 绝对尺寸颗粒比对卡 Canvas
+            drawPhysicalParticlesCanvas('canvas-print-particles', true);
+
+            // 填充参数机理表格
+            const impacts = generateParameterImpactsForPrint(sim);
+            document.getElementById('pr-impact-tbody').innerHTML = impacts.map(row => `
+                <tr>
+                    <td class="font-semibold bg-slate-50">${row.dim}</td>
+                    <td class="font-mono">${row.val}</td>
+                    <td>${row.desc}</td>
+                </tr>
+            `).join('');
+
+            // 填充品鉴打分表
+            const useScores = document.getElementById('chk-print-scores').checked;
+            const sensoryItems = [
+                { name: '干/湿香气 (Aroma)', val: Number(document.getElementById('slider-u-aroma').value), hint: '花香 / 果香 / 烤坚果可可 / 草本木质' },
+                { name: '酸质明亮感 (Acidity)', val: Number(document.getElementById('slider-u-acid').value), hint: '柑橘明亮酸 / 柔和果酸 / 尖酸刺激 / 平淡' },
+                { name: '甜感饱满度 (Sweetness)', val: Number(document.getElementById('slider-u-sweet').value), hint: '蜂蜜蔗糖甜 / 焦糖太妃 / 回甘持久 / 寡淡' },
+                { name: '苦味与收敛感 (Bitterness)', val: Number(document.getElementById('slider-u-bitter').value), hint: '愉悦黑巧苦 / 焦苦刺激 / 干涩锁喉 / 极低苦' },
+                { name: '醇厚度与触感 (Body)', val: Number(document.getElementById('slider-u-body').value), hint: '糖浆厚重 / 奶油顺滑 / 红茶清爽 / 薄水感' },
+                { name: '余韵与干净度 (Finish)', val: Number(document.getElementById('slider-u-finish').value), hint: '悠长回甘 / 干净通透 / 杂味残留' }
+            ];
+
+            document.getElementById('pr-sensory-tbody').innerHTML = sensoryItems.map(item => {
+                const checks = [1, 2, 3, 4, 5].map(n => {
+                    const isChecked = useScores && Math.round(item.val) === n;
+                    return `<span class="mr-2 font-mono">${isChecked ? '☑' : '☐'}${n}分</span>`;
+                }).join('');
+                const suffix = useScores ? `<span class="font-mono font-bold ml-1">(${item.val.toFixed(1)}分)</span>` : '';
+                return `
+                    <tr>
+                        <td class="font-semibold bg-slate-50">${item.name}</td>
+                        <td>${checks}${suffix}</td>
+                        <td class="text-slate-600">${item.hint}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('pr-flavor-tags').innerHTML = FLAVOR_TAGS.map(tag => {
+                const checked = state.selectedTags.has(tag);
+                return `<span>${checked ? '☑' : '☐'} ${tag}</span>`;
+            }).join('');
+
+            document.getElementById('pr-notes-flavor').textContent = document.getElementById('input-notes-flavor').value;
+            document.getElementById('pr-notes-next').textContent = document.getElementById('input-notes-next').value;
+        }
+
+        /**
+         * 7. 更新所有网页 DOM 读数、徽章与 Canvas 图表
+         */
+        function updateLabUI() {
+            runPhysicsSimulation();
+            const sim = state.sim;
+
+            document.getElementById('metric-ey').textContent = sim.ey.toFixed(2);
+            document.getElementById('metric-tds').textContent = sim.tds.toFixed(2);
+
+            const mins = Math.floor(sim.totalTime / 60);
+            const secs = sim.totalTime % 60;
+            document.getElementById('metric-time').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+            const stallTag = document.getElementById('metric-stall-tag');
+            if (sim.isStalling) stallTag.classList.remove('hidden');
+            else stallTag.classList.add('hidden');
+
+            document.getElementById('metric-flow').textContent = sim.avgFlowRate.toFixed(2);
+            document.getElementById('metric-darcy').textContent = sim.darcyIndex.toFixed(1);
+            document.getElementById('metric-darcy-label').textContent =
+                sim.darcyIndex > 6.5 ? '/10 慢流' : (sim.darcyIndex < 2.8 ? '/10 快流' : '/10 适中');
+
+            document.getElementById('bean-prop-porosity').textContent = sim.bean.porosityLabel;
+            document.getElementById('bean-prop-fines').textContent = sim.bean.finesLabel;
+            document.getElementById('bean-prop-roast').textContent = sim.bean.roastLabel;
+
+            document.getElementById('val-grind').textContent = `${state.grind} μm`;
+            let grindDesc = '标准手冲中细';
+            if (state.grind <= 420) grindDesc = '极细粉(意式/摩卡)';
+            else if (state.grind <= 580) grindDesc = '手冲细粉';
+            else if (state.grind <= 800) grindDesc = '标准手冲中粉';
+            else grindDesc = '粗粉(法压/冷萃)';
+            document.getElementById('label-grind-desc').textContent = grindDesc;
+            document.getElementById('val-ssa').textContent = `${sim.ssa} cm²/g`;
+            document.getElementById('val-fines-pct').textContent = `${sim.finesPct.toFixed(1)}%`;
+
+            document.getElementById('val-temp').textContent = `${state.temp.toFixed(1)} °C`;
+            let tempDesc = '均衡酸甜活化';
+            if (state.temp >= 94) tempDesc = '高温极限提香';
+            else if (state.temp >= 90) tempDesc = '浅烘高频酸甜';
+            else if (state.temp >= 86) tempDesc = '中烘柔和醇厚';
+            else tempDesc = '低温控苦降涩';
+            document.getElementById('label-temp-desc').textContent = tempDesc;
+
+            document.getElementById('val-ratio').textContent = `1 : ${state.ratio.toFixed(1)}`;
+            document.getElementById('val-water-ml').textContent = `注水: ${Math.round(sim.totalWater)} ml`;
+
+            document.querySelectorAll('.agitation-btn').forEach(btn => {
+                const active = btn.dataset.agitation === state.agitation;
+                btn.className = `agitation-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer ${
+                    active
+                        ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-inner'
+                        : 'bg-lab-bg/60 border-lab-border text-stone-400 hover:border-stone-600'
+                }`;
+            });
+
+            document.querySelectorAll('.dripper-btn').forEach(btn => {
+                const active = btn.dataset.dripper === state.dripper;
+                btn.className = `dripper-btn py-1.5 px-1.5 rounded-lg border text-xs font-medium transition flex flex-col items-center cursor-pointer ${
+                    active
+                        ? 'bg-amber-500/20 border-amber-500 text-amber-300 shadow-inner'
+                        : 'bg-lab-bg/60 border-lab-border text-stone-400 hover:border-stone-600'
+                }`;
+            });
+
+            const goldBadge = document.getElementById('gold-cup-badge');
+            const eyDot = document.getElementById('badge-ey-status');
+            if (sim.ey >= 18 && sim.ey <= 22 && sim.tds >= 1.15 && sim.tds <= 1.45) {
+                goldBadge.textContent = '★ 理想金杯区间 (Gold Cup)';
+                goldBadge.className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold';
+                eyDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+            } else if (sim.ey < 18) {
+                goldBadge.textContent = '▼ 萃取不足 (Under)';
+                goldBadge.className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30 font-semibold';
+                eyDot.className = 'w-2 h-2 rounded-full bg-sky-400';
+            } else if (sim.ey > 22) {
+                goldBadge.textContent = '▲ 过度萃取 (Over)';
+                goldBadge.className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-red-500/15 text-red-300 border border-red-500/30 font-semibold';
+                eyDot.className = 'w-2 h-2 rounded-full bg-red-400';
+            } else {
+                goldBadge.textContent = '◆ 萃取适中 / 浓度偏移';
+                goldBadge.className = 'text-xs font-mono px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 font-semibold';
+                eyDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+            }
+
+            document.getElementById('phys-k').textContent = `${sim.permeabilityK.toFixed(2)} D`;
+            document.getElementById('phys-clog').textContent = sim.clogIndex.toFixed(2);
+            document.getElementById('phys-diff').textContent = `${sim.tempFactor.toFixed(2)}x`;
+            document.getElementById('phys-channel').textContent =
+                sim.channelingRisk > 30 ? `偏高 (${sim.channelingRisk}%)` : `低 (${sim.channelingRisk}%)`;
+
+            const riskTag = document.getElementById('diagnostic-risk-tag');
+            if (sim.isStalling) {
+                riskTag.textContent = '⚠ 尾部细粉堵水 (Stalling)';
+                riskTag.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/40';
+            } else if (sim.channelingRisk > 30) {
+                riskTag.textContent = '⚡ 通道效应风险较高';
+                riskTag.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40';
+            } else {
+                riskTag.textContent = '✓ 粉床层析均匀稳定';
+                riskTag.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
+            }
+
+            document.getElementById('diagnostic-text').textContent = generateDiagnosticReport(sim);
+
+            const fp = sim.flavorPct;
+            document.getElementById('pct-acid').textContent = fp.acid + '%';
+            document.getElementById('pct-sweet').textContent = fp.sweet + '%';
+            document.getElementById('pct-bitter').textContent = fp.bitter + '%';
+            document.getElementById('pct-astringent').textContent = fp.astringent + '%';
+
+            document.getElementById('bar-acid').style.width = fp.acid + '%';
+            document.getElementById('bar-sweet').style.width = fp.sweet + '%';
+            document.getElementById('bar-bitter').style.width = fp.bitter + '%';
+            document.getElementById('bar-astringent').style.width = fp.astringent + '%';
+
+            const balanceTag = document.getElementById('sensory-balance-tag');
+            if (fp.sweet >= 38 && fp.astringent <= 9) {
+                balanceTag.textContent = '高甜圆润平衡';
+            } else if (fp.acid >= 40) {
+                balanceTag.textContent = '明亮果酸主导';
+            } else if (fp.bitter + fp.astringent >= 36) {
+                balanceTag.textContent = '浓郁苦韵偏强';
+            } else {
+                balanceTag.textContent = '经典复合风味';
+            }
+
+            document.getElementById('score-aroma').textContent = sim.radarScores.aroma.toFixed(1);
+            document.getElementById('score-acidity').textContent = sim.radarScores.acidity.toFixed(1);
+            document.getElementById('score-sweetness').textContent = sim.radarScores.sweetness.toFixed(1);
+            document.getElementById('score-body').textContent = sim.radarScores.body.toFixed(1);
+            document.getElementById('score-aftertaste').textContent = sim.radarScores.aftertaste.toFixed(1);
+            document.getElementById('score-cleanliness').textContent = sim.radarScores.cleanliness.toFixed(1);
+
+            // 绘制所有 Canvas (含 1:1 物理尺寸颗粒比对卡)
+            drawPhysicalParticlesCanvas('canvas-physical-particles', false);
+            applyWebPhysicalZoomLock();
+            drawGoldCupChart();
+            drawKineticsChart();
+            drawSensoryRadar();
+            syncPrintReportSheet();
+        }
+
+        function renderBeanPresets() {
+            const container = document.getElementById('bean-preset-list');
+            container.innerHTML = '';
+
+            const beans = Object.values(BEAN_PRESETS);
+            beans.forEach((bean, idx) => {
+                const isSelected = bean.id === state.beanId;
+                const spanFull = (idx === beans.length - 1 && beans.length % 2 === 1) ? 'sm:col-span-2' : '';
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `${spanFull} text-left p-2.5 rounded-xl border transition flex flex-col justify-between cursor-pointer ${
+                    isSelected
+                        ? 'bg-amber-500/15 border-amber-500 glow-amber'
+                        : 'bg-lab-card/80 border-lab-border hover:border-stone-600'
+                }`;
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="text-xs font-bold ${isSelected ? 'text-amber-300' : 'text-stone-200'}">${bean.name}</span>
+                            ${isSelected ? '<span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>' : ''}
+                        </div>
+                        <div class="text-[10px] font-mono text-stone-400 mt-0.5">${bean.process}</div>
+                    </div>
+                    <div class="mt-1.5 text-[10px] text-amber-200/80 bg-lab-bg/60 px-2 py-0.5 rounded border border-lab-border/60 truncate">
+                        ${bean.notes}
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    state.beanId = bean.id;
+                    renderBeanPresets();
+                    updateLabUI();
+                });
+                container.appendChild(card);
+            });
+        }
+
+        function renderFlavorTags() {
+            const container = document.getElementById('flavor-tags-list');
+            container.innerHTML = '';
+            FLAVOR_TAGS.forEach(tag => {
+                const active = state.selectedTags.has(tag);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `px-2.5 py-1 rounded-full text-xs border transition cursor-pointer ${
+                    active
+                        ? 'bg-amber-500 text-stone-950 font-semibold border-amber-400'
+                        : 'bg-lab-bg text-stone-300 border-lab-border hover:border-stone-500'
+                }`;
+                btn.textContent = (active ? '☑ ' : '☐ ') + tag;
+                btn.addEventListener('click', () => {
+                    if (state.selectedTags.has(tag)) state.selectedTags.delete(tag);
+                    else state.selectedTags.add(tag);
+                    renderFlavorTags();
+                    syncPrintReportSheet();
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        function applyOptimalRecipe() {
+            const opt = BEAN_PRESETS[state.beanId].optimal;
+            state.grind = opt.grind;
+            state.temp = opt.temp;
+            state.ratio = opt.ratio;
+            state.agitation = opt.agitation;
+            state.dripper = opt.dripper;
+
+            document.getElementById('slider-grind').value = state.grind;
+            document.getElementById('slider-temp').value = state.temp;
+            document.getElementById('slider-ratio').value = state.ratio;
+            updateLabUI();
+        }
+
+        window.onload = function () {
+            renderBeanPresets();
+            renderFlavorTags();
+
+            document.getElementById('slider-grind').addEventListener('input', (e) => {
+                state.grind = Number(e.target.value);
+                updateLabUI();
+            });
+            document.getElementById('slider-temp').addEventListener('input', (e) => {
+                state.temp = Number(e.target.value);
+                updateLabUI();
+            });
+            document.getElementById('slider-ratio').addEventListener('input', (e) => {
+                state.ratio = Number(e.target.value);
+                updateLabUI();
+            });
+
+            document.querySelectorAll('.agitation-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.agitation = btn.dataset.agitation;
+                    updateLabUI();
+                });
+            });
+
+            document.querySelectorAll('.dripper-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.dripper = btn.dataset.dripper;
+                    updateLabUI();
+                });
+            });
+
+            document.getElementById('btn-optimal-recipe').addEventListener('click', applyOptimalRecipe);
+
+            // 屏幕微调面板与滑块
+            document.getElementById('btn-toggle-calib').addEventListener('click', () => {
+                state.showCalibPanel = !state.showCalibPanel;
+                document.getElementById('panel-screen-calib').classList.toggle('hidden', !state.showCalibPanel);
+            });
+
+            document.getElementById('slider-screen-calib').addEventListener('input', (e) => {
+                state.screenCalib = Number(e.target.value);
+                document.getElementById('val-screen-calib').textContent = state.screenCalib.toFixed(2) + 'x';
+                applyWebPhysicalZoomLock();
+            });
+
+            document.getElementById('btn-reset-calib').addEventListener('click', () => {
+                state.screenCalib = 1.00;
+                state.baseDpr = window.devicePixelRatio || 1;
+                document.getElementById('slider-screen-calib').value = 1.00;
+                document.getElementById('val-screen-calib').textContent = '1.00x';
+                applyWebPhysicalZoomLock();
+            });
+
+            // 绑定主观品鉴打分滑块与文本输入
+            const subjectivePairs = [
+                ['slider-u-aroma', 'val-u-aroma'],
+                ['slider-u-acid', 'val-u-acid'],
+                ['slider-u-sweet', 'val-u-sweet'],
+                ['slider-u-bitter', 'val-u-bitter'],
+                ['slider-u-body', 'val-u-body'],
+                ['slider-u-finish', 'val-u-finish']
+            ];
+            subjectivePairs.forEach(([sId, vId]) => {
+                document.getElementById(sId).addEventListener('input', (e) => {
+                    document.getElementById(vId).textContent = Number(e.target.value).toFixed(1);
+                    syncPrintReportSheet();
+                });
+            });
+
+            ['input-barista', 'input-roast', 'input-actual-time', 'input-actual-tds', 'input-notes-flavor', 'input-notes-next', 'chk-print-scores'].forEach(id => {
+                document.getElementById(id).addEventListener('input', syncPrintReportSheet);
+            });
+
+            // 打印按钮绑定
+            const handlePrint = () => {
+                syncPrintReportSheet();
+                window.print();
+            };
+            document.getElementById('btn-print-top').addEventListener('click', handlePrint);
+            document.getElementById('btn-print-mobile').addEventListener('click', handlePrint);
+            document.getElementById('btn-print-bottom').addEventListener('click', handlePrint);
+
+            // 监听窗口大小与缩放变化
+            window.addEventListener('resize', () => {
+                updateLabUI();
+            });
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', applyWebPhysicalZoomLock);
+            }
+
+            applyOptimalRecipe();
+
+            function animateDripperLoop() {
+                drawDripperSimulation();
+                requestAnimationFrame(animateDripperLoop);
+            }
+            animateDripperLoop();
+        };
+    </script>
 </body>
 </html>
